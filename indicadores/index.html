@@ -236,10 +236,11 @@ function exportarSAP(){
     return p[0].padStart(2,'0')+':'+( p[1]||'00').padStart(2,'0')+':00';
   };
 
-  // horas trabajadas como decimal (ej: 1.5)
+  // horas trabajadas — sin comillas para que Excel lo lea como número
   const fmtHoras = (ini,fin) => {
     const h = calcH(ini,fin);
-    return h ? parseFloat(h) : '';
+    if(!h) return '';
+    return String(parseFloat(h)).replace('.',',');
   };
 
   // encabezados exactos de la macro
@@ -248,25 +249,29 @@ function exportarSAP(){
   const rows = notif.map(o => {
     const ini = o['hora inicio']||o.hora_ini||'';
     const fin = o['hora fin']||o.hora_fin||'';
-    const fecha = fmtFechaSAP(o['fecha realización']||o.fecha);
+    const fecha = fmtFechaSAP(o['fecha realización']||o['fecha realizacion']||o.fecha);
     return [
-      o.os||'',         // ORDEN
-      fecha,            // FECHA
-      fecha,            // FECHA (duplicada)
-      fmtHoraSAP(ini),  // HS INICIO
-      fmtHoraSAP(fin),  // HS FIN
-      fmtHoras(ini,fin),// HRS TRABJ.
-      o.legajo||''      // LEGAJO1
+      String(o.os||'').trim(),
+      fecha,
+      fecha,
+      fmtHoraSAP(ini),
+      fmtHoraSAP(fin),
+      fmtHoras(ini,fin),
+      String(o.legajo||'').trim()
     ];
   });
 
-  // generar CSV con punto y coma (compatible con Excel SAP)
-  const csv = [headers, ...rows]
-    .map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(';'))
-    .join('\n');
+  // CSV con punto y coma — HRS TRABJ sin comillas para que Excel lo lea como número
+  const csvRows = [headers, ...rows].map((r,ri) =>
+    r.map((v,ci) => {
+      // columna F (índice 5) = HRS TRABJ — sin comillas para forzar número
+      if(ri > 0 && ci === 5) return String(v??'');
+      return `"${String(v??'').replace(/"/g,'""')}"`;
+    }).join(';')
+  ).join('\n');
 
   const bom = '\uFEFF';
-  const blob = new Blob([bom+csv], {type:'text/csv;charset=utf-8'});
+  const blob = new Blob([bom+csvRows], {type:'text/csv;charset=utf-8'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url;

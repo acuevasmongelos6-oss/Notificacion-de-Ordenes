@@ -165,6 +165,17 @@ function renderIndicadores(){
     </div>
 
     <div class="card">
+      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        Exportar para macro SAP
+        <button class="btn btn-primary" onclick="exportarSAP()" style="font-size:13px;padding:7px 14px">↓ Exportar en formato para Macro_SAP</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">
+        Exporta solo las OS <strong>notificadas</strong> en el formato exacto que lee la macro:<br>
+        <code style="font-size:11px;background:var(--bg);padding:2px 6px;border-radius:4px">ORDEN · FECHA · FECHA · HS INICIO · HS FIN · HRS TRABJ. · LEGAJO1</code>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-title">Indicadores por técnico</div>
       ${lista.length===0?'<div class="no-data">Sin datos. Actualizá la sincronización.</div>':`
       <div style="overflow-x:auto">
@@ -183,20 +194,9 @@ function renderIndicadores(){
               const av=t.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
               const notif=t.ops.filter(o=>o.estado==='notificada');
               const pend =t.ops.filter(o=>o.estado!=='notificada');
-
-              // OS notificadas en el mes
               const osMes=notif.filter(o=>normF(o['fecha realización']||o.fecha)>=mes).length;
-
-              // horas semana (lunes a hoy)
-              const hsSemana=notif
-                .filter(o=>{ const f=normF(o['fecha realización']||o.fecha); return f>=lunes&&f<=hoy; })
-                .reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
-
-              // horas ayer
-              const hsAyer=notif
-                .filter(o=>normF(o['fecha realización']||o.fecha)===ayer_)
-                .reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
-
+              const hsSemana=notif.filter(o=>{ const f=normF(o['fecha realización']||o.fecha); return f>=lunes&&f<=hoy; }).reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
+              const hsAyer=notif.filter(o=>normF(o['fecha realización']||o.fecha)===ayer_).reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
               return `<tr>
                 <td>
                   <span class="tec-av">${av}</span>
@@ -214,6 +214,67 @@ function renderIndicadores(){
       </div>`}
     </div>
   </div>`;
+}
+
+function exportarSAP(){
+  const notif = OPS.filter(o=>o.estado==='notificada' && !o.cerrado_sap);
+  if(!notif.length){ alert('No hay operaciones notificadas para exportar.'); return; }
+
+  // formato fecha DD.MM.YYYY
+  const fmtFechaSAP = (val) => {
+    if(!val) return '';
+    const iso = normF(val);
+    if(!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return d+'.'+m+'.'+y;
+  };
+
+  // formato hora HH:MM:00
+  const fmtHoraSAP = (h) => {
+    if(!h) return '';
+    const p = String(h).split(':');
+    return p[0].padStart(2,'0')+':'+( p[1]||'00').padStart(2,'0')+':00';
+  };
+
+  // horas trabajadas como decimal (ej: 1.5)
+  const fmtHoras = (ini,fin) => {
+    const h = calcH(ini,fin);
+    return h ? parseFloat(h) : '';
+  };
+
+  // encabezados exactos de la macro
+  const headers = ['ORDEN','FECHA','FECHA','HS INICIO','HS FIN','HRS TRABJ.','LEGAJO1'];
+
+  const rows = notif.map(o => {
+    const ini = o['hora inicio']||o.hora_ini||'';
+    const fin = o['hora fin']||o.hora_fin||'';
+    const fecha = fmtFechaSAP(o['fecha realización']||o.fecha);
+    return [
+      o.os||'',         // ORDEN
+      fecha,            // FECHA
+      fecha,            // FECHA (duplicada)
+      fmtHoraSAP(ini),  // HS INICIO
+      fmtHoraSAP(fin),  // HS FIN
+      fmtHoras(ini,fin),// HRS TRABJ.
+      o.legajo||''      // LEGAJO1
+    ];
+  });
+
+  // generar CSV con punto y coma (compatible con Excel SAP)
+  const csv = [headers, ...rows]
+    .map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(';'))
+    .join('\n');
+
+  const bom = '\uFEFF';
+  const blob = new Blob([bom+csv], {type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `SAP_notificaciones_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 window.addEventListener('DOMContentLoaded', cargar);

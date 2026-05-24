@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP PM — Indicadores</title>
+<meta name="theme-color" content="#185FA5">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#185FA5;--blue-dk:#0C447C;--blue-lt:#E6F1FB;
+  --green:#3B6D11;--green-lt:#EAF3DE;
+  --amber:#854F0B;--amber-lt:#FAEEDA;
+  --red:#A32D2D;--red-lt:#FCEBEB;
+  --gray:#5F5E5A;--gray-lt:#F1EFE8;
+  --border:#e0ddd6;--bg:#f7f6f2;--white:#fff;
+  --text:#1a1a18;--muted:#6b6a66;
+  --r:12px;--rsm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
+.header{background:var(--blue);padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
+.header-logo{font-size:15px;font-weight:700;color:#fff}
+.header-sync{font-size:12px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:8px}
+.content{padding:20px;max-width:900px;margin:0 auto}
+.sync-bar{padding:8px 20px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sync-bar.loading{background:var(--blue-lt);color:var(--blue-dk)}
+.sync-bar.success{background:var(--green-lt);color:var(--green)}
+.sync-bar.error{background:var(--red-lt);color:var(--red)}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text)}
+/* TECNICO TABLE */
+.tec-table{width:100%;border-collapse:collapse}
+.tec-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.tec-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tec-table tr:last-child td{border-bottom:none}
+.tec-table tr:hover td{background:var(--bg)}
+.tec-av{width:34px;height:34px;border-radius:50%;background:var(--blue-lt);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--blue);flex-shrink:0;margin-right:8px;vertical-align:middle}
+.tec-nombre{font-weight:600;vertical-align:middle}
+/* PILLS */
+.pill{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;min-width:36px}
+.pill-blue{background:var(--blue-lt);color:var(--blue)}
+.pill-amber{background:var(--amber-lt);color:var(--amber)}
+.pill-green{background:var(--green-lt);color:var(--green)}
+.pill-gray{background:var(--gray-lt);color:var(--gray)}
+/* SPINNER */
+.spinner{width:16px;height:16px;border:2px solid rgba(24,95,165,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+.loading-screen{min-height:calc(100vh - 53px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
+.big-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:13px;font-weight:600;color:var(--text);font-family:inherit}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.no-data{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+/* RESUMEN SUPERIOR */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.metric-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rsm);padding:14px}
+.metric-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.metric-value{font-size:26px;font-weight:700}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:3px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-logo">📊 SAP PM — Indicadores</div>
+  <div class="header-sync">
+    <span id="sync-text"></span>
+    <button class="btn" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff;padding:5px 12px;font-size:12px" onclick="cargar()">↻ Actualizar</button>
+  </div>
+</div>
+<div id="sync-bar" style="display:none" class="sync-bar"></div>
+<div id="app"><div class="loading-screen"><div class="big-spinner"></div><span>Cargando indicadores…</span></div></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWiXOIIDt4vN5v_05l7gyiXncimja3964vVPgEIz4BpD3RHUz2nYp4vTSXDLNVu0k/exec';
+
+let OPS = [];
+
+function normF(val){
+  if(!val) return '';
+  if(val instanceof Date){ const d=new Date(val); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  const s=String(val).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)){ const[d,m,y]=s.split('/'); return y+'-'+m+'-'+d; }
+  const d=new Date(val); if(!isNaN(d.getTime())){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  return '';
+}
+function calcH(ini,fin){
+  const toMin=t=>{ if(!t) return -1; const p=String(t).split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; };
+  const d=toMin(fin)-toMin(ini); return d>0?d/60:0;
+}
+function hoyKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function ayer(){ const d=new Date(); d.setDate(d.getDate()-1); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function inicioSemana(){
+  const d=new Date();
+  const day=d.getDay(); // 0=dom
+  const diff=d.getDate()-(day===0?6:day-1); // lunes
+  const lun=new Date(d); lun.setDate(diff);
+  return lun.getFullYear()+'-'+String(lun.getMonth()+1).padStart(2,'0')+'-'+String(lun.getDate()).padStart(2,'0');
+}
+function inicioMes(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01'; }
+
+async function cargar(){
+  setSB('loading','↻ Cargando datos…');
+  try{
+    const r=await fetch(SCRIPT_URL+'?action=leer');
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    OPS=d.operaciones||[];
+    setSB('success','✓ '+new Date().toLocaleString('es-PY'));
+    setTimeout(()=>{ document.getElementById('sync-bar').style.display='none'; },4000);
+    document.getElementById('sync-text').textContent='Actualizado: '+new Date().toLocaleTimeString('es-PY');
+    renderIndicadores();
+  } catch(e){
+    setSB('error','Error al cargar: '+e.message);
+  }
+}
+
+function setSB(tipo,msg){ const b=document.getElementById('sync-bar'); b.className='sync-bar '+tipo; b.textContent=msg; b.style.display='flex'; }
+
+function renderIndicadores(){
+  const hoy   = hoyKey();
+  const ayer_ = ayer();
+  const lunes  = inicioSemana();
+  const mes    = inicioMes();
+
+  // agrupar por técnico
+  const tecnicos={};
+  OPS.forEach(o=>{
+    const key=o.legajo||'–';
+    if(!tecnicos[key]) tecnicos[key]={ legajo:key, nombre:o.tecnico||'Sin nombre', ops:[] };
+    tecnicos[key].ops.push(o);
+  });
+
+  const lista=Object.values(tecnicos).sort((a,b)=>a.nombre.localeCompare(b.nombre));
+
+  // métricas globales
+  const totalOps    = OPS.length;
+  const notificadas = OPS.filter(o=>o.estado==='notificada').length;
+  const pendientes  = OPS.filter(o=>o.estado!=='notificada').length;
+  const horasHoy    = OPS.filter(o=>o.estado==='notificada'&&normF(o['fecha realización']||o.fecha)===hoy)
+                         .reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
+
+  document.getElementById('app').innerHTML=`
+  <div class="content">
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total OS</div>
+        <div class="metric-value">${totalOps}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Notificadas</div>
+        <div class="metric-value" style="color:var(--green)">${notificadas}</div>
+        <div class="metric-sub">${totalOps?Math.round(notificadas/totalOps*100):0}% cumplimiento</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Pendientes</div>
+        <div class="metric-value" style="color:var(--amber)">${pendientes}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Horas hoy</div>
+        <div class="metric-value" style="color:var(--blue)">${horasHoy.toFixed(1)}h</div>
+        <div class="metric-sub">${hoy.split('-').reverse().join('/')}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Indicadores por técnico</div>
+      ${lista.length===0?'<div class="no-data">Sin datos. Actualizá la sincronización.</div>':`
+      <div style="overflow-x:auto">
+        <table class="tec-table">
+          <thead>
+            <tr>
+              <th>Técnico</th>
+              <th title="OS notificadas en el mes actual">OS notif. mes</th>
+              <th title="OS pendientes de notificación">OS pendientes</th>
+              <th title="Suma de horas notificadas en la semana actual (lunes a hoy)">Hs semana</th>
+              <th title="Suma de horas notificadas el día anterior">Hs ayer</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${lista.map(t=>{
+              const av=t.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+              const notif=t.ops.filter(o=>o.estado==='notificada');
+              const pend =t.ops.filter(o=>o.estado!=='notificada');
+
+              // OS notificadas en el mes
+              const osMes=notif.filter(o=>normF(o['fecha realización']||o.fecha)>=mes).length;
+
+              // horas semana (lunes a hoy)
+              const hsSemana=notif
+                .filter(o=>{ const f=normF(o['fecha realización']||o.fecha); return f>=lunes&&f<=hoy; })
+                .reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
+
+              // horas ayer
+              const hsAyer=notif
+                .filter(o=>normF(o['fecha realización']||o.fecha)===ayer_)
+                .reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
+
+              return `<tr>
+                <td>
+                  <span class="tec-av">${av}</span>
+                  <span class="tec-nombre">${t.nombre}</span>
+                  <div style="font-size:11px;color:var(--muted);margin-left:42px">Legajo ${t.legajo}</div>
+                </td>
+                <td><span class="pill pill-blue">${osMes}</span></td>
+                <td><span class="pill ${pend.length>0?'pill-amber':'pill-gray'}">${pend.length}</span></td>
+                <td><span class="pill pill-green">${hsSemana.toFixed(1)}h</span></td>
+                <td><span class="pill ${hsAyer>0?'pill-blue':'pill-gray'}">${hsAyer.toFixed(1)}h</span></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>`}
+    </div>
+  </div>`;
+}
+
+window.addEventListener('DOMContentLoaded', cargar);
+</script>
+</body>
+</html>

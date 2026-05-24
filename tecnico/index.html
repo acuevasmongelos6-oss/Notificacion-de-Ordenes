@@ -344,11 +344,11 @@ async function notificar(idx){
   const op    = DB.ops[idx];
   const fecha = getFReal(op)||op.fecha||hoyKey();
 
-  // bloquear si ya hay superposiciones entre notificados
-  const todasTec = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo)&&o.estado==='notificada');
-  const confExist = detectarConflictos(todasTec);
+  // bloquear si hay superposiciones en la misma fecha del trabajo a notificar
+  const mismaFecha = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo)&&o.estado==='notificada'&&getFReal(o)===fecha);
+  const confExist = detectarConflictos(mismaFecha);
   if(confExist.size>0){
-    mostrarErr('err-bloqueo-'+idx,idx,'⚠️ Tenés trabajos notificados con <strong>superposición de horarios</strong> (marcados en rojo arriba). Corregí esos horarios antes de continuar.');
+    mostrarErr('err-bloqueo-'+idx,idx,'⚠️ Tenés trabajos notificados con <strong>superposición de horarios</strong> en esta fecha (marcados en rojo arriba). Corregí esos horarios antes de continuar.');
     return;
   }
 

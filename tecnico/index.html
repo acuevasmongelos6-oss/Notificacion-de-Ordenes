@@ -325,10 +325,10 @@ function renderTecnico(){
       html+=`
       <div class="op-card" id="card-${idx}">
         <div class="op-badges">
-          <span class="badge badge-blue">OS ${o.os||'–'}</span>
+          ${o.os&&o.os!=='–'?`<span class="badge badge-blue">OS ${o.os}</span>`:''}
           ${o.tipo_os?`<span class="badge badge-gray">${o.tipo_os}</span>`:''}
         </div>
-        <div class="op-desc">${o.descripcion||'Sin descripción'}</div>
+        <div class="op-desc" style="font-size:18px">${o.descripcion||'Sin descripción'}</div>
         <div class="op-meta">
           ${o.fecha?`<span>📅 ${fmtF(o.fecha)}</span>`:''}
         </div>

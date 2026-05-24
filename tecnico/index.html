@@ -220,7 +220,24 @@ function acceder(){
     document.getElementById('login-err').innerHTML=`<div class="alert alert-warn">No hay operaciones para el legajo <strong>${leg}</strong>. Verificá el número o consultá al planificador.</div>`;
     return;
   }
-  TECNICO={legajo:leg,nombre:ops[0].tecnico||'Técnico'};
+  const nombre=ops[0].tecnico||'Técnico';
+  const av=nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  // mostrar pantalla de confirmación
+  document.getElementById('app').innerHTML=`
+  <div class="login-wrap">
+    <div class="login-box">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--blue);margin:0 auto 16px">${av}</div>
+      <div class="login-title">${nombre}</div>
+      <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:6px">Legajo ${leg}</div>
+      <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5">¿Sos vos? Confirmá para continuar.</div>
+      <button class="btn btn-primary btn-block" onclick="confirmarAcceso('${leg}','${nombre.replace(/'/g,"\\'")}')">✓ Sí, soy yo — Ingresar</button>
+      <button class="btn btn-block" style="margin-top:8px" onclick="renderLogin()">No, volver</button>
+    </div>
+  </div>`;
+}
+
+function confirmarAcceso(leg, nombre){
+  TECNICO={legajo:leg,nombre};
   document.getElementById('header-right').innerHTML=`<button class="btn btn-ghost btn-sm" onclick="salir()">Salir</button>`;
   renderTecnico();
 }
@@ -246,9 +263,12 @@ function renderTecnico(){
   }
   const maxH=Math.max(...dias.map(d=>d.horas),1);
 
-  // últimos notificados
-  const ultimos=[...notif].sort((a,b)=>(getFReal(b)+getFin(b)).localeCompare(getFReal(a)+getFin(a))).slice(0,10);
+  // últimos notificados — más recientes primero, sin límite visible
+  const ultimos=[...notif].sort((a,b)=>(getFReal(b)+getFin(b)).localeCompare(getFReal(a)+getFin(a)));
   const conf=detectarConflictos(ultimos);
+
+  // pendientes — más viejos primero (fecha más antigua al tope)
+  const pendOrdenados=[...pend].sort((a,b)=>normF(a.fecha).localeCompare(normF(b.fecha)));
 
   document.getElementById('sync-bar').style.display='none';
 
@@ -271,17 +291,19 @@ function renderTecnico(){
           </div>`;
         }).join('')}
       </div>
+
       ${ultimos.length>0?`
       <div class="ultimos-titulo">📋 Últimos trabajos notificados</div>
-      <div class="ultimos-scroll">
+      <div style="display:flex;flex-direction:column;gap:6px">
         ${ultimos.map((o,ui)=>{
           const ini=getIni(o),fin=getFin(o),dur=calcH(ini,fin),esCon=conf.has(ui);
-          return `<div class="ultimo-card ${esCon?'conflicto':''}">
-            ${esCon?'<div class="ultimo-conflict-tag">⚠ Superposición</div>':''}
-            <div class="ultimo-desc">${o.descripcion||'–'}</div>
-            <div class="ultimo-fecha">📅 ${fmtF(getFReal(o))}</div>
-            <div class="ultimo-horario">▶ ${ini||'–'} ⏹ ${fin||'–'}</div>
-            ${dur?`<span class="ultimo-hrs">${dur}h</span>`:''}
+          return `<div style="background:${esCon?'rgba(163,45,45,.35)':'rgba(255,255,255,.1)'};border:1px solid ${esCon?'rgba(240,149,149,.6)':'rgba(255,255,255,.15)'};border-radius:var(--rsm);padding:8px 12px">
+            ${esCon?'<div style="font-size:10px;font-weight:700;color:#F09595;margin-bottom:3px">⚠ Superposición</div>':''}
+            <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">${o.descripcion||'–'}</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+              <div style="font-size:11px;color:rgba(255,255,255,.65)">📅 ${fmtF(getFReal(o))} &nbsp; ▶ ${ini||'–'} ⏹ ${fin||'–'}</div>
+              ${dur?`<span style="font-size:11px;font-weight:700;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;color:#fff">${dur}h</span>`:''}
+            </div>
           </div>`;
         }).join('')}
       </div>`
@@ -298,7 +320,7 @@ function renderTecnico(){
   if(pend.length===0){
     html+=`<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">¡Todo al día!</div><div class="empty-sub">No tenés operaciones pendientes de notificar.</div></div>`;
   } else {
-    pend.forEach(o=>{
+    pendOrdenados.forEach(o=>{
       const idx=DB.ops.indexOf(o);
       html+=`
       <div class="op-card" id="card-${idx}">

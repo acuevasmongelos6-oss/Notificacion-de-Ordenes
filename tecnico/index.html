@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SAP PM — Técnico</title>
+<meta name="theme-color" content="#185FA5">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#185FA5;--blue-dk:#0C447C;--blue-lt:#E6F1FB;
+  --green:#3B6D11;--green-lt:#EAF3DE;
+  --amber:#854F0B;--amber-lt:#FAEEDA;
+  --red:#A32D2D;--red-lt:#FCEBEB;
+  --gray:#5F5E5A;--gray-lt:#F1EFE8;
+  --border:#e0ddd6;--bg:#f7f6f2;--white:#fff;
+  --text:#1a1a18;--muted:#6b6a66;
+  --r:12px;--rsm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
+.header{background:var(--blue);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.header-logo{font-size:15px;font-weight:700;color:#fff}
+.sync-bar{padding:8px 16px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sync-bar.loading{background:var(--blue-lt);color:var(--blue-dk)}
+.sync-bar.success{background:var(--green-lt);color:var(--green)}
+.sync-bar.error{background:var(--red-lt);color:var(--red)}
+.content{padding:16px;max-width:520px;margin:0 auto}
+/* LOGIN */
+.login-wrap{min-height:calc(100vh - 53px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.login-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.login-icon{width:64px;height:64px;border-radius:50%;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
+.login-title{font-size:20px;font-weight:700;text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5}
+.leg-input{font-size:28px;font-weight:700;text-align:center;letter-spacing:6px;padding:14px;border:2px solid var(--border);border-radius:var(--rsm);width:100%;-webkit-appearance:none}
+.leg-input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:14px;font-weight:600;color:var(--text);font-family:inherit;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-success{background:var(--green);border-color:var(--green);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-block{width:100%;margin-top:8px}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge-green{background:var(--green-lt);color:var(--green)}
+.badge-amber{background:var(--amber-lt);color:var(--amber)}
+.badge-blue{background:var(--blue-lt);color:var(--blue)}
+.badge-gray{background:var(--gray-lt);color:var(--gray)}
+/* ALERTS */
+.alert{padding:12px 14px;border-radius:var(--rsm);font-size:13px;margin-bottom:12px;line-height:1.5}
+.alert-info{background:var(--blue-lt);color:var(--blue-dk);border:1px solid #B5D4F4}
+.alert-warn{background:var(--amber-lt);color:var(--amber);border:1px solid #FAC775}
+/* RESUMEN SUPERIOR */
+.resumen{background:var(--blue-dk);padding:16px}
+.resumen-inner{max-width:520px;margin:0 auto}
+.tec-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tec-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
+.tec-name{font-weight:700;font-size:15px;color:#fff}
+.tec-leg{font-size:12px;color:rgba(255,255,255,.65)}
+/* DIAS */
+.horas-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:8px}
+.dias-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px}
+.dia-col{display:flex;flex-direction:column;align-items:center;gap:3px}
+.dia-bar-wrap{height:40px;display:flex;align-items:flex-end;width:100%}
+.dia-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;background:rgba(255,255,255,.2)}
+.dia-bar.tiene{background:rgba(255,255,255,.8)}
+.dia-bar.hoy{background:#fff}
+.dia-label{font-size:10px;color:rgba(255,255,255,.55);font-weight:500}
+.dia-horas{font-size:10px;color:rgba(255,255,255,.9);font-weight:700}
+.dia-horas.cero{color:rgba(255,255,255,.3)}
+/* ULTIMOS */
+.ultimos-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:8px}
+.ultimos-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ultimos-scroll::-webkit-scrollbar{display:none}
+.ultimo-card{flex-shrink:0;width:200px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--rsm);padding:10px 12px}
+.ultimo-card.conflicto{background:rgba(163,45,45,.35);border-color:rgba(240,149,149,.6)}
+.ultimo-conflict-tag{font-size:10px;font-weight:700;color:#F09595;margin-bottom:4px}
+.ultimo-desc{font-size:12px;font-weight:600;color:#fff;margin-bottom:5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ultimo-fecha{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:4px}
+.ultimo-horario{font-size:11px;color:rgba(255,255,255,.75)}
+.ultimo-hrs{font-size:11px;font-weight:700;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;color:#fff;margin-top:4px;display:inline-block}
+/* OP CARDS */
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.op-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.op-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.op-desc{font-weight:700;font-size:15px;margin-bottom:10px;line-height:1.4}
+.op-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);margin-bottom:14px}
+.op-meta span{background:var(--bg);padding:3px 9px;border-radius:20px}
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;font-weight:600}
+input[type="time"]{width:100%;font-size:20px;font-weight:700;text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--rsm);background:var(--white);color:var(--text);-webkit-appearance:none}
+input[type="time"]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rsm);background:var(--white);color:var(--text);font-size:14px;font-family:inherit;-webkit-appearance:none;resize:vertical;min-height:70px}
+textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+/* EMPTY */
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.empty-sub{font-size:13px;line-height:1.5}
+/* SPINNER */
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+.spinner-dark{border-color:rgba(24,95,165,.2);border-top-color:var(--blue)}
+.loading-screen{min-height:calc(100vh - 53px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
+.big-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:11px 20px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:200;white-space:nowrap;transition:opacity .3s;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.toast.hidden{opacity:0}
+@media(max-width:380px){.dias-grid{gap:2px}.dia-label{font-size:9px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-logo">🔧 SAP PM — Técnico</div>
+  <div id="header-right"></div>
+</div>
+<div id="sync-bar" style="display:none" class="sync-bar loading"></div>
+<div id="app"></div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const SK_DATA = 'sap_v5_data';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWiXOIIDt4vN5v_05l7gyiXncimja3964vVPgEIz4BpD3RHUz2nYp4vTSXDLNVu0k/exec';
+
+let DB     = loadDB();
+let TECNICO = null;
+
+function loadDB(){ try{ const r=localStorage.getItem(SK_DATA); if(r) return JSON.parse(r); }catch(e){} return {ops:[],sync:null}; }
+function saveDB(){ try{ localStorage.setItem(SK_DATA,JSON.stringify(DB)); }catch(e){} }
+
+// ── UTILS ──────────────────────────────────────────────────────
+function toMin(t){ if(!t) return -1; const p=String(t).split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; }
+function calcH(ini,fin){ const d=toMin(fin)-toMin(ini); return d>0?(d/60).toFixed(1):null; }
+function normF(val){ if(!val) return ''; if(val instanceof Date){ const d=new Date(val); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); } const s=String(val).trim(); if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s; if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)){ const[d,m,y]=s.split('/'); return y+'-'+m+'-'+d; } const d=new Date(val); if(!isNaN(d.getTime())){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); } return ''; }
+function fmtF(val){ const iso=normF(val); if(!iso) return '–'; const[y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; }
+function hoyKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function getIni(o){ return o['hora inicio']||o.hora_ini||''; }
+function getFin(o){ return o['hora fin']||o.hora_fin||''; }
+function getFReal(o){ return normF(o['fecha realización']||o['fecha realizacion']||o.fecha||''); }
+
+// ── SYNC ───────────────────────────────────────────────────────
+async function sync(){
+  setSB('loading','↻ Actualizando operaciones…');
+  try{
+    const r=await fetch(SCRIPT_URL+'?action=leer');
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    DB.ops  = d.operaciones;
+    DB.sync = new Date().toLocaleString('es-PY');
+    saveDB();
+    setSB('success','✓ Actualizado · '+DB.sync);
+    setTimeout(()=>{ document.getElementById('sync-bar').style.display='none'; },4000);
+  } catch(e){
+    setSB('error','Sin conexión — datos locales');
+  }
+}
+function setSB(tipo,msg){ const b=document.getElementById('sync-bar'); b.className='sync-bar '+tipo; b.textContent=msg; b.style.display='flex'; }
+
+// ── DETECCIÓN CONFLICTOS ───────────────────────────────────────
+function detectarConflictos(ops){
+  const conf=new Set();
+  for(let i=0;i<ops.length;i++) for(let j=i+1;j<ops.length;j++){
+    const a=ops[i],b=ops[j];
+    const fa=getFReal(a),fb=getFReal(b);
+    if(!fa||fa!==fb) continue;
+    const ai=toMin(getIni(a)),af=toMin(getFin(a));
+    const bi=toMin(getIni(b)),bf=toMin(getFin(b));
+    if(ai<0||af<0||bi<0||bf<0||af<=ai||bf<=bi) continue;
+    if(ai<bf&&af>bi){ conf.add(i); conf.add(j); }
+  }
+  return conf;
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',async()=>{
+  renderCargando();
+  await sync();
+  renderLogin();
+});
+
+function renderCargando(){
+  document.getElementById('app').innerHTML=`<div class="loading-screen"><div class="big-spinner"></div><span>Cargando operaciones…</span></div>`;
+}
+
+// ── LOGIN ──────────────────────────────────────────────────────
+function renderLogin(){
+  document.getElementById('sync-bar').style.display='none';
+  document.getElementById('header-right').innerHTML='';
+  document.getElementById('app').innerHTML=`
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-icon">👷</div>
+      <div class="login-title">Ingreso técnico</div>
+      <div class="login-sub">Ingresá tu número de legajo para ver tus operaciones asignadas</div>
+      <div class="form-group">
+        <label class="form-label">Número de legajo</label>
+        <input class="leg-input" id="leg" type="number" inputmode="numeric" placeholder="0000" onkeydown="if(event.key==='Enter')acceder()">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="acceder()">Ingresar →</button>
+      <div id="login-err" style="margin-top:12px"></div>
+    </div>
+  </div>`;
+  setTimeout(()=>document.getElementById('leg')?.focus(),200);
+}
+
+function acceder(){
+  const leg=document.getElementById('leg')?.value.trim();
+  if(!leg) return;
+  const ops=DB.ops.filter(o=>String(o.legajo)===String(leg));
+  if(!ops.length){
+    document.getElementById('login-err').innerHTML=`<div class="alert alert-warn">No hay operaciones para el legajo <strong>${leg}</strong>. Verificá el número o consultá al planificador.</div>`;
+    return;
+  }
+  TECNICO={legajo:leg,nombre:ops[0].tecnico||'Técnico'};
+  document.getElementById('header-right').innerHTML=`<button class="btn btn-ghost btn-sm" onclick="salir()">Salir</button>`;
+  renderTecnico();
+}
+
+function salir(){ TECNICO=null; renderLogin(); }
+
+// ── VISTA TÉCNICO ──────────────────────────────────────────────
+function renderTecnico(){
+  const todas  = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo));
+  const pend   = todas.filter(o=>o.estado!=='notificada');
+  const notif  = todas.filter(o=>o.estado==='notificada');
+  const av     = TECNICO.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+
+  // horas 7 días
+  const ahora=new Date();
+  const dias=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(ahora); d.setDate(ahora.getDate()-i);
+    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const label=['D','L','M','X','J','V','S'][d.getDay()];
+    const hrs=notif.filter(o=>getFReal(o)===key).reduce((a,o)=>{ const h=calcH(getIni(o),getFin(o)); return a+(h?parseFloat(h):0); },0);
+    dias.push({key,label,esHoy:i===0,horas:+hrs.toFixed(1)});
+  }
+  const maxH=Math.max(...dias.map(d=>d.horas),1);
+
+  // últimos notificados
+  const ultimos=[...notif].sort((a,b)=>(getFReal(b)+getFin(b)).localeCompare(getFReal(a)+getFin(a))).slice(0,10);
+  const conf=detectarConflictos(ultimos);
+
+  document.getElementById('sync-bar').style.display='none';
+
+  let html=`
+  <div class="resumen">
+    <div class="resumen-inner">
+      <div class="tec-row">
+        <div class="tec-av">${av}</div>
+        <div><div class="tec-name">${TECNICO.nombre}</div><div class="tec-leg">Legajo ${TECNICO.legajo}</div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="refrescar()">↻</button>
+      </div>
+      <div class="horas-titulo">⏱ Horas notificadas — últimos 7 días</div>
+      <div class="dias-grid">
+        ${dias.map(d=>{
+          const barH=Math.max(3,Math.round((d.horas/maxH)*36));
+          return `<div class="dia-col">
+            <div class="dia-bar-wrap"><div class="dia-bar ${d.horas>0?'tiene':''} ${d.esHoy?'hoy':''}" style="height:${barH}px"></div></div>
+            <div class="dia-label">${d.esHoy?'Hoy':d.label}</div>
+            <div class="dia-horas ${d.horas===0?'cero':''}">${d.horas>0?d.horas+'h':'–'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${ultimos.length>0?`
+      <div class="ultimos-titulo">📋 Últimos trabajos notificados</div>
+      <div class="ultimos-scroll">
+        ${ultimos.map((o,ui)=>{
+          const ini=getIni(o),fin=getFin(o),dur=calcH(ini,fin),esCon=conf.has(ui);
+          return `<div class="ultimo-card ${esCon?'conflicto':''}">
+            ${esCon?'<div class="ultimo-conflict-tag">⚠ Superposición</div>':''}
+            <div class="ultimo-desc">${o.descripcion||'–'}</div>
+            <div class="ultimo-fecha">📅 ${fmtF(getFReal(o))}</div>
+            <div class="ultimo-horario">▶ ${ini||'–'} ⏹ ${fin||'–'}</div>
+            ${dur?`<span class="ultimo-hrs">${dur}h</span>`:''}
+          </div>`;
+        }).join('')}
+      </div>`
+      :`<div style="font-size:12px;color:rgba(255,255,255,.4);text-align:center;padding:8px 0">Sin trabajos notificados aún</div>`}
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section-title" style="margin-top:4px">
+      ⏳ Pendientes de notificar
+      <span class="badge badge-amber">${pend.length}</span>
+    </div>`;
+
+  if(pend.length===0){
+    html+=`<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">¡Todo al día!</div><div class="empty-sub">No tenés operaciones pendientes de notificar.</div></div>`;
+  } else {
+    pend.forEach(o=>{
+      const idx=DB.ops.indexOf(o);
+      html+=`
+      <div class="op-card" id="card-${idx}">
+        <div class="op-badges">
+          <span class="badge badge-blue">OS ${o.os||'–'}</span>
+          ${o.tipo_os?`<span class="badge badge-gray">${o.tipo_os}</span>`:''}
+        </div>
+        <div class="op-desc">${o.descripcion||'Sin descripción'}</div>
+        <div class="op-meta">
+          ${o.fecha?`<span>📅 ${fmtF(o.fecha)}</span>`:''}
+        </div>
+        <div class="time-grid">
+          <div class="form-group" style="margin:0">
+            <label class="form-label">▶ Hora inicio</label>
+            <input type="time" id="ini-${idx}" value="${getIni(o)}">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">⏹ Hora fin</label>
+            <input type="time" id="fin-${idx}" value="${getFin(o)}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Observaciones</label>
+          <textarea id="obs-${idx}">${o.obs||''}</textarea>
+        </div>
+        <button class="btn btn-success btn-block" id="btn-${idx}" onclick="notificar(${idx})">✓ Confirmar notificación</button>
+      </div>`;
+    });
+  }
+
+  html+=`</div>`;
+  document.getElementById('app').innerHTML=html;
+}
+
+// ── NOTIFICAR ──────────────────────────────────────────────────
+async function notificar(idx){
+  const ini  = document.getElementById('ini-'+idx)?.value;
+  const fin  = document.getElementById('fin-'+idx)?.value;
+  const obs  = document.getElementById('obs-'+idx)?.value||'';
+  if(!ini||!fin){ toast('Ingresá hora de inicio y hora de fin.'); return; }
+  if(ini>=fin){ toast('La hora de fin debe ser mayor que la de inicio.'); return; }
+
+  const op    = DB.ops[idx];
+  const fecha = getFReal(op)||op.fecha||hoyKey();
+
+  const btn=document.getElementById('btn-'+idx);
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Verificando…'; }
+
+  // verificar en Sheets
+  try{
+    const vr=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'verificar',legajo:TECNICO.legajo,fila:op.fila,fecha,hora_ini:ini,hora_fin:fin})});
+    const vd=await vr.json();
+    if(!vd.ok){
+      const c=vd.conflictos?.[0];
+      mostrarErr('err-'+idx,idx,c?`⚠️ Horario ocupado: <strong>${c.descripcion}</strong> (${c.hora_ini} – ${c.hora_fin}). Modificá el horario.`:'⚠️ El horario se superpone con otro trabajo.');
+      if(btn){ btn.disabled=false; btn.innerHTML='✓ Confirmar notificación'; }
+      return;
+    }
+  } catch(e){
+    // sin conexión — validación local
+    const conf=DB.ops.filter((o,i)=>{ if(i===idx||o.estado!=='notificada') return false; if(getFReal(o)!==fecha) return false; const oi=toMin(getIni(o)),of=toMin(getFin(o)); return oi>=0&&of>=0&&toMin(ini)<of&&toMin(fin)>oi; });
+    if(conf.length){ mostrarErr('err-'+idx,idx,`⚠️ Superposición con <strong>${conf[0].descripcion}</strong>.`); if(btn){ btn.disabled=false; btn.innerHTML='✓ Confirmar notificación'; } return; }
+  }
+
+  const horas_real=calcH(ini,fin);
+  if(btn){ btn.innerHTML='<span class="spinner"></span>Guardando…'; }
+
+  DB.ops[idx]={...DB.ops[idx],'hora inicio':ini,'hora fin':fin,horas_real,obs,estado:'notificada','fecha realización':fecha};
+  saveDB();
+
+  try{
+    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'notificar',fila:op.fila,hora_ini:ini,hora_fin:fin,horas_real,obs,fecha})});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('✓ Guardado en Google Sheets');
+  } catch(e){ toast('Guardado localmente — sin conexión'); }
+  renderTecnico();
+}
+
+async function refrescar(){ await sync(); renderTecnico(); }
+
+function mostrarErr(id,idx,msg){
+  const ex=document.getElementById(id); if(ex) ex.remove();
+  const d=document.createElement('div'); d.id=id; d.className='alert alert-warn'; d.style.marginBottom='10px'; d.innerHTML=msg;
+  const btn=document.getElementById('btn-'+idx),card=document.getElementById('card-'+idx);
+  if(btn&&card) card.insertBefore(d,btn);
+}
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.remove('hidden'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.add('hidden'),3500); }
+</script>
+</body>
+</html>

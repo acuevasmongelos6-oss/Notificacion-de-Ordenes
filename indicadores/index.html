@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAP PM — Indicadores</title>
-<meta name="theme-color" content="#185FA5">
+<title>Mantenimiento Frigomerc — Resumen de notificación de OS</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -12,277 +11,337 @@
   --green:#3B6D11;--green-lt:#EAF3DE;
   --amber:#854F0B;--amber-lt:#FAEEDA;
   --red:#A32D2D;--red-lt:#FCEBEB;
-  --gray:#5F5E5A;--gray-lt:#F1EFE8;
-  --border:#e0ddd6;--bg:#f7f6f2;--white:#fff;
-  --text:#1a1a18;--muted:#6b6a66;
-  --r:12px;--rsm:8px;
+  --gold:#B8860B;--silver:#707070;--bronze:#8B4513;
+  --border:#e0ddd6;--bg:#0f1923;--white:#fff;
+  --text:#fff;--muted:rgba(255,255,255,.6);
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
-.header{background:var(--blue);padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
-.header-logo{font-size:15px;font-weight:700;color:#fff}
-.header-sync{font-size:12px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:8px}
-.content{padding:20px;max-width:900px;margin:0 auto}
-.sync-bar{padding:8px 20px;font-size:12px;display:flex;align-items:center;gap:8px}
-.sync-bar.loading{background:var(--blue-lt);color:var(--blue-dk)}
-.sync-bar.success{background:var(--green-lt);color:var(--green)}
-.sync-bar.error{background:var(--red-lt);color:var(--red)}
-/* CARDS */
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px}
-.card-title{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text)}
-/* TECNICO TABLE */
-.tec-table{width:100%;border-collapse:collapse}
-.tec-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.tec-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
-.tec-table tr:last-child td{border-bottom:none}
-.tec-table tr:hover td{background:var(--bg)}
-.tec-av{width:34px;height:34px;border-radius:50%;background:var(--blue-lt);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--blue);flex-shrink:0;margin-right:8px;vertical-align:middle}
-.tec-nombre{font-weight:600;vertical-align:middle}
-/* PILLS */
-.pill{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;min-width:36px}
-.pill-blue{background:var(--blue-lt);color:var(--blue)}
-.pill-amber{background:var(--amber-lt);color:var(--amber)}
-.pill-green{background:var(--green-lt);color:var(--green)}
-.pill-gray{background:var(--gray-lt);color:var(--gray)}
-/* SPINNER */
-.spinner{width:16px;height:16px;border:2px solid rgba(24,95,165,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
-.loading-screen{min-height:calc(100vh - 53px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
-.big-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.header{background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.1);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.header-logo{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px}
+.header-logo span{color:var(--blue-lt)}
+.header-right{display:flex;align-items:center;gap:16px}
+.sync-status{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-refresh{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
+.btn-refresh:hover{background:rgba(255,255,255,.15)}
+.btn-export{background:var(--blue);border:1px solid var(--blue);color:#fff;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
+.btn-export:hover{background:var(--blue-dk)}
+
+/* MAIN */
+.main{flex:1;padding:24px 32px}
+.semana-label{font-size:13px;color:var(--muted);margin-bottom:20px;text-align:center;text-transform:uppercase;letter-spacing:.08em}
+
+/* RANKING TABLE */
+.ranking-wrap{max-width:900px;margin:0 auto}
+.ranking-table{width:100%;border-collapse:collapse}
+.ranking-table thead tr{border-bottom:2px solid rgba(255,255,255,.15)}
+.ranking-table th{padding:14px 20px;font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:left}
+.ranking-table th:nth-child(3),
+.ranking-table th:nth-child(4){text-align:center}
+.ranking-table tbody tr{border-bottom:1px solid rgba(255,255,255,.07);transition:background .15s}
+.ranking-table tbody tr:hover{background:rgba(255,255,255,.04)}
+
+/* POSICION */
+.pos-cell{padding:16px 20px;width:80px}
+.pos-badge{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
+.pos-1{background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;box-shadow:0 0 20px rgba(255,215,0,.4)}
+.pos-2{background:linear-gradient(135deg,#C0C0C0,#A0A0A0);color:#000}
+.pos-3{background:linear-gradient(135deg,#CD7F32,#A0522D);color:#fff}
+.pos-other{background:rgba(255,255,255,.1);color:var(--muted)}
+
+/* NOMBRE */
+.nombre-cell{padding:16px 20px}
+.tec-row{display:flex;align-items:center;gap:14px}
+.tec-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.tec-nombre{font-size:18px;font-weight:700}
+.tec-legajo{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* HORAS */
+.horas-cell{padding:16px 20px;text-align:center;width:220px}
+.horas-value{font-size:32px;font-weight:800;line-height:1}
+.horas-label{font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+.horas-bar-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:8px;overflow:hidden}
+.horas-bar{height:100%;border-radius:2px;transition:width .5s ease}
+
+/* PENDIENTES */
+.pend-cell{padding:16px 20px;text-align:center;width:180px}
+.pend-badge{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;font-size:26px;font-weight:800}
+.pend-0{background:rgba(59,109,17,.25);color:#4ade80;border:1px solid rgba(74,222,128,.3)}
+.pend-low{background:rgba(133,79,11,.25);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.pend-high{background:rgba(163,45,45,.25);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+
+/* LOADING */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:14px;color:var(--muted);font-size:15px}
+.spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--blue-lt);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:13px;font-weight:600;color:var(--text);font-family:inherit}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
-.no-data{text-align:center;padding:32px;color:var(--muted);font-size:13px}
-/* RESUMEN SUPERIOR */
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.metric-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rsm);padding:14px}
-.metric-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-.metric-value{font-size:26px;font-weight:700}
-.metric-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* FOOTER */
+.footer{padding:12px 32px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+.countdown{display:flex;align-items:center;gap:6px}
+.countdown-bar{width:100px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.countdown-fill{height:100%;background:var(--blue-lt);border-radius:2px;transition:width 1s linear}
+
+/* EXPORT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
+.modal-overlay.open{display:flex}
+.modal{background:#1a2535;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:28px;max-width:400px;width:90%}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end}
+.modal-btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit}
+.modal-cancel{background:rgba(255,255,255,.1);color:#fff}
+.modal-confirm{background:var(--blue);color:#fff}
 </style>
 </head>
 <body>
+
 <div class="header">
-  <div class="header-logo">📊 SAP PM — Indicadores</div>
-  <div class="header-sync">
-    <span id="sync-text"></span>
-    <button class="btn" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff;padding:5px 12px;font-size:12px" onclick="cargar()">↻ Actualizar</button>
+  <div class="header-logo">
+    <span>⚙️</span>
+    <div>
+      <div>Mantenimiento Frigomerc — Resumen de notificación de OS</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:400" id="semana-label"></div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="sync-status">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-text">Cargando…</span>
+    </div>
+    <button class="btn-refresh" onclick="cargar()">↻ Actualizar</button>
+    <button class="btn-export" onclick="abrirExport()">↓ Exportar Macro SAP</button>
   </div>
 </div>
-<div id="sync-bar" style="display:none" class="sync-bar"></div>
-<div id="app"><div class="loading-screen"><div class="big-spinner"></div><span>Cargando indicadores…</span></div></div>
 
+<div class="main" id="main">
+  <div class="loading"><div class="spinner"></div><span>Cargando datos…</span></div>
+</div>
+
+<div class="footer">
+  <span id="footer-total"></span>
+  <div class="countdown">
+    <span style="font-size:11px">Próxima actualización:</span>
+    <div class="countdown-bar"><div class="countdown-fill" id="countdown-fill" style="width:100%"></div></div>
+    <span id="countdown-text">5:00</span>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">Exportar para Macro SAP</div>
+    <div class="modal-sub">Se exportarán las operaciones <strong>notificadas</strong> que no tienen <strong>Cerrado en SAP</strong>. El archivo quedará listo para usar en la macro.</div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button class="modal-btn modal-confirm" onclick="exportarSAP()">↓ Descargar Excel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWiXOIIDt4vN5v_05l7gyiXncimja3964vVPgEIz4BpD3RHUz2nYp4vTSXDLNVu0k/exec';
+const REFRESH_SEC = 300; // 5 minutos
 
 let OPS = [];
+let countdownSec = REFRESH_SEC;
+let countdownInterval = null;
 
+// ── UTILS ──────────────────────────────────────────────────────
 function normF(val){
-  if(!val) return '';
-  if(val instanceof Date){ const d=new Date(val); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  if(!val&&val!==0) return '';
   const s=String(val).trim();
+  if(!s||s==='0') return '';
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)){ const[d,m,y]=s.split('/'); return y+'-'+m+'-'+d; }
-  const d=new Date(val); if(!isNaN(d.getTime())){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){ const p=s.split('/'); return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0'); }
+  if(/^\d+(\.\d+)?$/.test(s)){ const n=parseFloat(s); if(n>1000){ const d=new Date(Date.UTC(1899,11,30)+n*86400000); return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0'); } }
+  try{ const d=new Date(val); if(!isNaN(d.getTime())){ const u=new Date(d.getTime()-d.getTimezoneOffset()*60000); return u.toISOString().slice(0,10); } }catch(e){}
   return '';
 }
 function calcH(ini,fin){
-  const toMin=t=>{ if(!t) return -1; const p=String(t).split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; };
+  const toMin=t=>{ if(!t) return -1; const s=String(t).replace(/:\d{2}$/,''); const p=s.split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; };
   const d=toMin(fin)-toMin(ini); return d>0?d/60:0;
 }
 function hoyKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function ayer(){ const d=new Date(); d.setDate(d.getDate()-1); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function inicioSemana(){
-  const d=new Date();
-  const day=d.getDay(); // 0=dom
-  const diff=d.getDate()-(day===0?6:day-1); // lunes
-  const lun=new Date(d); lun.setDate(diff);
-  return lun.getFullYear()+'-'+String(lun.getMonth()+1).padStart(2,'0')+'-'+String(lun.getDate()).padStart(2,'0');
+function lunesKey(){
+  const d=new Date(); const day=d.getDay();
+  const diff=d.getDate()-(day===0?6:day-1);
+  const l=new Date(d); l.setDate(diff);
+  return l.getFullYear()+'-'+String(l.getMonth()+1).padStart(2,'0')+'-'+String(l.getDate()).padStart(2,'0');
 }
-function inicioMes(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01'; }
+function fmtSemana(){
+  const l=lunesKey(), h=hoyKey();
+  const fmt=iso=>{ const[y,m,d]=iso.split('-'); return d+'/'+m; };
+  return 'Semana: '+fmt(l)+' – '+fmt(h)+'/'+h.split('-')[0];
+}
+function avatarColor(nombre){
+  const colors=['#185FA5','#3B6D11','#854F0B','#6B3FA0','#0F7B6C','#A32D2D','#1A6B8A','#7B5E00'];
+  let h=0; for(let i=0;i<nombre.length;i++) h=(h*31+nombre.charCodeAt(i))&0xFFFFFF;
+  return colors[Math.abs(h)%colors.length];
+}
 
+// ── CARGAR ─────────────────────────────────────────────────────
 async function cargar(){
-  setSB('loading','↻ Cargando datos…');
+  document.getElementById('sync-dot').style.background='#fbbf24';
+  document.getElementById('sync-text').textContent='Actualizando…';
   try{
     const r=await fetch(SCRIPT_URL+'?action=leer');
     const d=await r.json();
     if(d.error) throw new Error(d.error);
     OPS=d.operaciones||[];
-    setSB('success','✓ '+new Date().toLocaleString('es-PY'));
-    setTimeout(()=>{ document.getElementById('sync-bar').style.display='none'; },4000);
+    document.getElementById('sync-dot').style.background='#4ade80';
     document.getElementById('sync-text').textContent='Actualizado: '+new Date().toLocaleTimeString('es-PY');
-    renderIndicadores();
+    renderRanking();
+    resetCountdown();
   } catch(e){
-    setSB('error','Error al cargar: '+e.message);
+    document.getElementById('sync-dot').style.background='#f87171';
+    document.getElementById('sync-text').textContent='Error al conectar';
   }
 }
 
-function setSB(tipo,msg){ const b=document.getElementById('sync-bar'); b.className='sync-bar '+tipo; b.textContent=msg; b.style.display='flex'; }
+// ── RANKING ────────────────────────────────────────────────────
+function renderRanking(){
+  const hoy  = hoyKey();
+  const lunes = lunesKey();
 
-function renderIndicadores(){
-  const hoy   = hoyKey();
-  const ayer_ = ayer();
-  const lunes  = inicioSemana();
-  const mes    = inicioMes();
+  document.getElementById('semana-label').textContent = fmtSemana();
 
   // agrupar por técnico
-  const tecnicos={};
+  const mapa = {};
   OPS.forEach(o=>{
-    const key=o.legajo||'–';
-    if(!tecnicos[key]) tecnicos[key]={ legajo:key, nombre:o.tecnico||'Sin nombre', ops:[] };
-    tecnicos[key].ops.push(o);
+    const k = o.legajo||'–';
+    if(!mapa[k]) mapa[k]={ legajo:k, nombre:o.tecnico||'Sin nombre', ops:[] };
+    mapa[k].ops.push(o);
   });
 
-  const lista=Object.values(tecnicos).sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  const lista = Object.values(mapa).map(t=>{
+    const notif = t.ops.filter(o=>o.estado==='notificada');
+    const pend  = t.ops.filter(o=>o.estado!=='notificada').length;
+    const hsSemana = notif
+      .filter(o=>{ const f=normF(o['fecha realizacion']||o['fecha realización']||o.fecha); return f>=lunes&&f<=hoy; })
+      .reduce((a,o)=>a+calcH(o['hora inicio']||'',o['hora fin']||''),0);
+    return { ...t, pend, hsSemana:+hsSemana.toFixed(1) };
+  });
 
-  // métricas globales
-  const totalOps    = OPS.length;
-  const notificadas = OPS.filter(o=>o.estado==='notificada').length;
-  const pendientes  = OPS.filter(o=>o.estado!=='notificada').length;
-  const horasHoy    = OPS.filter(o=>o.estado==='notificada'&&normF(o['fecha realización']||o.fecha)===hoy)
-                         .reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
+  // ordenar: más horas primero, desempate por menos pendientes
+  lista.sort((a,b)=>{
+    if(b.hsSemana !== a.hsSemana) return b.hsSemana - a.hsSemana;
+    return a.pend - b.pend;
+  });
 
-  document.getElementById('app').innerHTML=`
-  <div class="content">
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-label">Total OS</div>
-        <div class="metric-value">${totalOps}</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Notificadas</div>
-        <div class="metric-value" style="color:var(--green)">${notificadas}</div>
-        <div class="metric-sub">${totalOps?Math.round(notificadas/totalOps*100):0}% cumplimiento</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Pendientes</div>
-        <div class="metric-value" style="color:var(--amber)">${pendientes}</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Horas hoy</div>
-        <div class="metric-value" style="color:var(--blue)">${horasHoy.toFixed(1)}h</div>
-        <div class="metric-sub">${hoy.split('-').reverse().join('/')}</div>
-      </div>
-    </div>
+  // asignar posiciones (empate = misma posición)
+  let pos=1;
+  for(let i=0;i<lista.length;i++){
+    if(i>0 && lista[i].hsSemana===lista[i-1].hsSemana && lista[i].pend===lista[i-1].pend){
+      lista[i].pos = lista[i-1].pos;
+    } else {
+      lista[i].pos = pos;
+    }
+    pos++;
+  }
 
-    <div class="card">
-      <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        Exportar para macro SAP
-        <button class="btn btn-primary" onclick="exportarSAP()" style="font-size:13px;padding:7px 14px">↓ Exportar en formato para Macro_SAP</button>
-      </div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.6">
-        Exporta solo las OS <strong>notificadas</strong> en el formato exacto que lee la macro:<br>
-        <code style="font-size:11px;background:var(--bg);padding:2px 6px;border-radius:4px">ORDEN · FECHA · FECHA · HS INICIO · HS FIN · HRS TRABJ. · LEGAJO1</code>
-      </div>
-    </div>
+  const maxH = Math.max(...lista.map(t=>t.hsSemana), 1);
 
-    <div class="card">
-      <div class="card-title">Indicadores por técnico</div>
-      ${lista.length===0?'<div class="no-data">Sin datos. Actualizá la sincronización.</div>':`
-      <div style="overflow-x:auto">
-        <table class="tec-table">
-          <thead>
-            <tr>
-              <th>Técnico</th>
-              <th title="OS notificadas en el mes actual">OS notif. mes</th>
-              <th title="OS pendientes de notificación">OS pendientes</th>
-              <th title="Suma de horas notificadas en la semana actual (lunes a hoy)">Hs semana</th>
-              <th title="Suma de horas notificadas el día anterior">Hs ayer</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${lista.map(t=>{
-              const av=t.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-              const notif=t.ops.filter(o=>o.estado==='notificada');
-              const pend =t.ops.filter(o=>o.estado!=='notificada');
-              const osMes=notif.filter(o=>normF(o['fecha realización']||o.fecha)>=mes).length;
-              const hsSemana=notif.filter(o=>{ const f=normF(o['fecha realización']||o.fecha); return f>=lunes&&f<=hoy; }).reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
-              const hsAyer=notif.filter(o=>normF(o['fecha realización']||o.fecha)===ayer_).reduce((a,o)=>a+calcH(o['hora inicio']||o.hora_ini||'',o['hora fin']||o.hora_fin||''),0);
-              return `<tr>
-                <td>
-                  <span class="tec-av">${av}</span>
-                  <span class="tec-nombre">${t.nombre}</span>
-                  <div style="font-size:11px;color:var(--muted);margin-left:42px">Legajo ${t.legajo}</div>
-                </td>
-                <td><span class="pill pill-blue">${osMes}</span></td>
-                <td><span class="pill ${pend.length>0?'pill-amber':'pill-gray'}">${pend.length}</span></td>
-                <td><span class="pill pill-green">${hsSemana.toFixed(1)}h</span></td>
-                <td><span class="pill ${hsAyer>0?'pill-blue':'pill-gray'}">${hsAyer.toFixed(1)}h</span></td>
-              </tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>`}
-    </div>
+  document.getElementById('footer-total').textContent =
+    `${lista.length} técnicos · ${OPS.filter(o=>o.estado==='notificada').length} OS notificadas · ${OPS.filter(o=>o.estado!=='notificada').length} pendientes`;
+
+  document.getElementById('main').innerHTML = `
+  <div class="ranking-wrap">
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>Pos.</th>
+          <th>Técnico</th>
+          <th style="text-align:center">Horas semana</th>
+          <th style="text-align:center">OS pendientes</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lista.map(t=>{
+          const av = t.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+          const color = avatarColor(t.nombre);
+          const posClass = t.pos===1?'pos-1':t.pos===2?'pos-2':t.pos===3?'pos-3':'pos-other';
+          const posEmoji = t.pos===1?'🥇':t.pos===2?'🥈':t.pos===3?'🥉':t.pos;
+          const barW = Math.round((t.hsSemana/maxH)*100);
+          const pendClass = t.pend===0?'pend-0':t.pend<=3?'pend-low':'pend-high';
+          return `<tr>
+            <td class="pos-cell">
+              <div class="pos-badge ${posClass}">${posEmoji}</div>
+            </td>
+            <td class="nombre-cell">
+              <div class="tec-row">
+                <div class="tec-av" style="background:${color}">${av}</div>
+                <div>
+                  <div class="tec-nombre">${t.nombre}</div>
+                  <div class="tec-legajo">Legajo ${t.legajo}</div>
+                </div>
+              </div>
+            </td>
+            <td class="horas-cell">
+              <div class="horas-value">${t.hsSemana}h</div>
+              <div class="horas-bar-wrap"><div class="horas-bar" style="width:${barW}%;background:${color}"></div></div>
+            </td>
+            <td class="pend-cell">
+              <div class="pend-badge ${pendClass}">${t.pend}</div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
   </div>`;
 }
 
-function exportarSAP(){
-  const notif = OPS.filter(o=>o.estado==='notificada' && !o.cerrado_sap);
-  if(!notif.length){ alert('No hay operaciones notificadas para exportar.'); return; }
-
-  // formato fecha DD.MM.YYYY
-  const fmtFechaSAP = (val) => {
-    if(!val) return '';
-    const iso = normF(val);
-    if(!iso) return '';
-    const [y,m,d] = iso.split('-');
-    return d+'.'+m+'.'+y;
-  };
-
-  // formato hora HH:MM:00
-  const fmtHoraSAP = (h) => {
-    if(!h) return '';
-    const p = String(h).split(':');
-    return p[0].padStart(2,'0')+':'+( p[1]||'00').padStart(2,'0')+':00';
-  };
-
-  // horas trabajadas — sin comillas para que Excel lo lea como número
-  const fmtHoras = (ini,fin) => {
-    const h = calcH(ini,fin);
-    if(!h) return '';
-    return String(parseFloat(h)).replace('.',',');
-  };
-
-  // encabezados exactos de la macro
-  const headers = ['ORDEN','FECHA','FECHA','HS INICIO','HS FIN','HRS TRABJ.','LEGAJO1'];
-
-  const rows = notif.map(o => {
-    const ini = o['hora inicio']||o.hora_ini||'';
-    const fin = o['hora fin']||o.hora_fin||'';
-    const fecha = fmtFechaSAP(o['fecha realización']||o['fecha realizacion']||o.fecha);
-    return [
-      String(o.os||'').trim(),
-      fecha,
-      fecha,
-      fmtHoraSAP(ini),
-      fmtHoraSAP(fin),
-      fmtHoras(ini,fin),
-      String(o.legajo||'').trim()
-    ];
-  });
-
-  // CSV con punto y coma — HRS TRABJ sin comillas para que Excel lo lea como número
-  const csvRows = [headers, ...rows].map((r,ri) =>
-    r.map((v,ci) => {
-      // columna F (índice 5) = HRS TRABJ — sin comillas para forzar número
-      if(ri > 0 && ci === 5) return String(v??'');
-      return `"${String(v??'').replace(/"/g,'""')}"`;
-    }).join(';')
-  ).join('\n');
-
-  const bom = '\uFEFF';
-  const blob = new Blob([bom+csvRows], {type:'text/csv;charset=utf-8'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = `SAP_notificaciones_${new Date().toISOString().slice(0,10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+// ── COUNTDOWN ──────────────────────────────────────────────────
+function resetCountdown(){
+  countdownSec = REFRESH_SEC;
+  clearInterval(countdownInterval);
+  countdownInterval = setInterval(()=>{
+    countdownSec--;
+    if(countdownSec<=0){ clearInterval(countdownInterval); cargar(); return; }
+    const m=Math.floor(countdownSec/60), s=countdownSec%60;
+    document.getElementById('countdown-text').textContent = m+':'+String(s).padStart(2,'0');
+    document.getElementById('countdown-fill').style.width = (countdownSec/REFRESH_SEC*100)+'%';
+  },1000);
 }
 
-window.addEventListener('DOMContentLoaded', cargar);
+// ── EXPORT ─────────────────────────────────────────────────────
+function abrirExport(){ document.getElementById('modal').classList.add('open'); }
+function cerrarModal(){ document.getElementById('modal').classList.remove('open'); }
+
+function exportarSAP(){
+  cerrarModal();
+  const notif = OPS.filter(o=>o.estado==='notificada'&&!o.cerrado_sap);
+  if(!notif.length){ alert('No hay operaciones notificadas para exportar.'); return; }
+
+  const fmtFecha = val=>{ const iso=normF(val); if(!iso) return ''; const[y,m,d]=iso.split('-'); return d+'.'+m+'.'+y; };
+  const fmtHora  = h=>{ if(!h) return ''; const p=String(h).split(':'); return p[0].padStart(2,'0')+':'+(p[1]||'00').padStart(2,'0')+':00'; };
+
+  const wsData = [
+    ['ORDEN','FECHA','FECHA','HS INICIO','HS FIN','HRS TRABJ.','LEGAJO1'],
+    ...notif.map(o=>{
+      const ini=o['hora inicio']||'', fin=o['hora fin']||'';
+      const fecha=fmtFecha(o['fecha realizacion']||o['fecha realización']||o.fecha);
+      const h=calcH(ini,fin);
+      return [String(o.os||'').trim(), fecha, fecha, fmtHora(ini), fmtHora(fin), h?parseFloat(h.toFixed(1)):0, String(o.legajo||'').trim()];
+    })
+  ];
+
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(wsData);
+  for(let r=1;r<wsData.length;r++){
+    const cr=XLSX.utils.encode_cell({r,c:5});
+    if(ws[cr]){ ws[cr].t='n'; ws[cr].z='0.0##'; delete ws[cr].w; }
+  }
+  ws['!cols']=[{wch:14},{wch:12},{wch:12},{wch:12},{wch:12},{wch:10},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws,'Notificaciones');
+  XLSX.writeFile(wb,'SAP_notificaciones_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', ()=>{ cargar(); });
 </script>
 </body>
 </html>

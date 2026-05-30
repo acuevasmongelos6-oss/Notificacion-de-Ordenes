@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento Frigomerc — Resumen de notificación de OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SAP PM — Técnico</title>
+<meta name="theme-color" content="#185FA5">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -11,146 +12,105 @@
   --green:#3B6D11;--green-lt:#EAF3DE;
   --amber:#854F0B;--amber-lt:#FAEEDA;
   --red:#A32D2D;--red-lt:#FCEBEB;
-  --gold:#B8860B;--silver:#707070;--bronze:#8B4513;
-  --border:#e0ddd6;--bg:#0f1923;--white:#fff;
-  --text:#fff;--muted:rgba(255,255,255,.6);
+  --gray:#5F5E5A;--gray-lt:#F1EFE8;
+  --border:#e0ddd6;--bg:#f7f6f2;--white:#fff;
+  --text:#1a1a18;--muted:#6b6a66;
+  --r:12px;--rsm:8px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
-
-/* HEADER */
-.header{background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.1);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
-.header-logo{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px}
-.header-logo span{color:var(--blue-lt)}
-.header-right{display:flex;align-items:center;gap:16px}
-.sync-status{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.btn-refresh{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
-.btn-refresh:hover{background:rgba(255,255,255,.15)}
-.btn-export{background:var(--blue);border:1px solid var(--blue);color:#fff;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
-.btn-export:hover{background:var(--blue-dk)}
-
-/* MAIN */
-.main{flex:1;padding:24px 32px}
-.semana-label{font-size:13px;color:var(--muted);margin-bottom:20px;text-align:center;text-transform:uppercase;letter-spacing:.08em}
-
-/* RANKING TABLE */
-.ranking-wrap{max-width:900px;margin:0 auto}
-.ranking-table{width:100%;border-collapse:collapse}
-.ranking-table thead tr{border-bottom:2px solid rgba(255,255,255,.15)}
-.ranking-table th{padding:14px 20px;font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:left}
-.ranking-table th:nth-child(3),
-.ranking-table th:nth-child(4){text-align:center}
-.ranking-table tbody tr{border-bottom:1px solid rgba(255,255,255,.07);transition:background .15s}
-.ranking-table tbody tr:hover{background:rgba(255,255,255,.04)}
-
-/* POSICION */
-.pos-cell{padding:16px 20px;width:80px}
-.pos-badge{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
-.pos-1{background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;box-shadow:0 0 20px rgba(255,215,0,.4)}
-.pos-2{background:linear-gradient(135deg,#C0C0C0,#A0A0A0);color:#000}
-.pos-3{background:linear-gradient(135deg,#CD7F32,#A0522D);color:#fff}
-.pos-other{background:rgba(255,255,255,.1);color:var(--muted)}
-
-/* NOMBRE */
-.nombre-cell{padding:16px 20px}
-.tec-row{display:flex;align-items:center;gap:14px}
-.tec-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
-.tec-nombre{font-size:18px;font-weight:700}
-.tec-legajo{font-size:12px;color:var(--muted);margin-top:2px}
-
-/* HORAS */
-.horas-cell{padding:16px 20px;text-align:center;width:220px}
-.horas-value{font-size:32px;font-weight:800;line-height:1}
-.horas-label{font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
-.horas-bar-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:8px;overflow:hidden}
-.horas-bar{height:100%;border-radius:2px;transition:width .5s ease}
-
-/* PENDIENTES */
-.pend-cell{padding:16px 20px;text-align:center;width:180px}
-.pend-badge{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;font-size:26px;font-weight:800}
-.pend-0{background:rgba(59,109,17,.25);color:#4ade80;border:1px solid rgba(74,222,128,.3)}
-.pend-low{background:rgba(133,79,11,.25);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
-.pend-high{background:rgba(163,45,45,.25);color:#f87171;border:1px solid rgba(248,113,113,.3)}
-
-/* LOADING */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:14px;color:var(--muted);font-size:15px}
-.spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--blue-lt);border-radius:50%;animation:spin .8s linear infinite}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
+.header{background:var(--blue);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.header-logo{font-size:15px;font-weight:700;color:#fff}
+.sync-bar{padding:8px 16px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sync-bar.loading{background:var(--blue-lt);color:var(--blue-dk)}
+.sync-bar.success{background:var(--green-lt);color:var(--green)}
+.sync-bar.error{background:var(--red-lt);color:var(--red)}
+.content{padding:16px;max-width:520px;margin:0 auto}
+.login-wrap{min-height:calc(100vh - 53px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.login-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.login-icon{width:64px;height:64px;border-radius:50%;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
+.login-title{font-size:20px;font-weight:700;text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5}
+.leg-input{font-size:28px;font-weight:700;text-align:center;letter-spacing:6px;padding:14px;border:2px solid var(--border);border-radius:var(--rsm);width:100%;-webkit-appearance:none}
+.leg-input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:14px;font-weight:600;color:var(--text);font-family:inherit;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-success{background:var(--green);border-color:var(--green);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-block{width:100%;margin-top:8px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge-green{background:var(--green-lt);color:var(--green)}
+.badge-amber{background:var(--amber-lt);color:var(--amber)}
+.badge-blue{background:var(--blue-lt);color:var(--blue)}
+.badge-gray{background:var(--gray-lt);color:var(--gray)}
+.alert{padding:12px 14px;border-radius:var(--rsm);font-size:13px;margin-bottom:12px;line-height:1.5}
+.alert-info{background:var(--blue-lt);color:var(--blue-dk);border:1px solid #B5D4F4}
+.alert-warn{background:var(--amber-lt);color:var(--amber);border:1px solid #FAC775}
+.resumen{background:var(--blue-dk);padding:16px}
+.resumen-inner{max-width:520px;margin:0 auto}
+.tec-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tec-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
+.tec-name{font-weight:700;font-size:15px;color:#fff}
+.tec-leg{font-size:12px;color:rgba(255,255,255,.65)}
+.horas-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:8px}
+.dias-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px}
+.dia-col{display:flex;flex-direction:column;align-items:center;gap:3px}
+.dia-bar-wrap{height:40px;display:flex;align-items:flex-end;width:100%}
+.dia-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;background:rgba(255,255,255,.2)}
+.dia-bar.tiene{background:rgba(255,255,255,.8)}
+.dia-bar.hoy{background:#fff}
+.dia-label{font-size:10px;color:rgba(255,255,255,.55);font-weight:500}
+.dia-horas{font-size:10px;color:rgba(255,255,255,.9);font-weight:700}
+.dia-horas.cero{color:rgba(255,255,255,.3)}
+.ultimos-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:8px}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.op-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.op-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.op-desc{font-weight:700;font-size:15px;margin-bottom:10px;line-height:1.4}
+.op-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);margin-bottom:14px}
+.op-meta span{background:var(--bg);padding:3px 9px;border-radius:20px}
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;font-weight:600}
+input[type="time"]{width:100%;font-size:20px;font-weight:700;text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--rsm);background:var(--white);color:var(--text);-webkit-appearance:none}
+input[type="time"]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rsm);background:var(--white);color:var(--text);font-size:14px;font-family:inherit;-webkit-appearance:none;resize:vertical;min-height:70px}
+textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.12)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.empty-sub{font-size:13px;line-height:1.5}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+.spinner-dark{border-color:rgba(24,95,165,.2);border-top-color:var(--blue)}
+.loading-screen{min-height:calc(100vh - 53px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
+.big-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* FOOTER */
-.footer{padding:12px 32px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
-.countdown{display:flex;align-items:center;gap:6px}
-.countdown-bar{width:100px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
-.countdown-fill{height:100%;background:var(--blue-lt);border-radius:2px;transition:width 1s linear}
-
-/* EXPORT MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
-.modal-overlay.open{display:flex}
-.modal{background:#1a2535;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:28px;max-width:400px;width:90%}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:8px}
-.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
-.modal-btns{display:flex;gap:10px;justify-content:flex-end}
-.modal-btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit}
-.modal-cancel{background:rgba(255,255,255,.1);color:#fff}
-.modal-confirm{background:var(--blue);color:#fff}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:11px 20px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:200;white-space:nowrap;transition:opacity .3s;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.toast.hidden{opacity:0}
+@media(max-width:380px){.dias-grid{gap:2px}.dia-label{font-size:9px}}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <div class="header-logo">
-    <span>⚙️</span>
-    <div>
-      <div>Mantenimiento Frigomerc — Resumen de notificación de OS</div>
-      <div style="font-size:12px;color:var(--muted);font-weight:400" id="semana-label"></div>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="sync-status">
-      <div class="sync-dot" id="sync-dot"></div>
-      <span id="sync-text">Cargando…</span>
-    </div>
-    <button class="btn-refresh" onclick="cargar()">↻ Actualizar</button>
-    <button class="btn-export" onclick="abrirExport()">↓ Exportar Macro SAP</button>
-  </div>
+  <div class="header-logo">🔧 SAP PM — Técnico</div>
+  <div id="header-right"></div>
 </div>
-
-<div class="main" id="main">
-  <div class="loading"><div class="spinner"></div><span>Cargando datos…</span></div>
-</div>
-
-<div class="footer">
-  <span id="footer-total"></span>
-  <div class="countdown">
-    <span style="font-size:11px">Próxima actualización:</span>
-    <div class="countdown-bar"><div class="countdown-fill" id="countdown-fill" style="width:100%"></div></div>
-    <span id="countdown-text">5:00</span>
-  </div>
-</div>
-
-<!-- EXPORT MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-title">Exportar para Macro SAP</div>
-    <div class="modal-sub">Se exportarán las operaciones <strong>notificadas</strong> que no tienen <strong>Cerrado en SAP</strong>. El archivo quedará listo para usar en la macro.</div>
-    <div class="modal-btns">
-      <button class="modal-btn modal-cancel" onclick="cerrarModal()">Cancelar</button>
-      <button class="modal-btn modal-confirm" onclick="exportarSAP()">↓ Descargar Excel</button>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div id="sync-bar" style="display:none" class="sync-bar loading"></div>
+<div id="app"></div>
+<div id="toast" class="toast hidden"></div>
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWiXOIIDt4vN5v_05l7gyiXncimja3964vVPgEIz4BpD3RHUz2nYp4vTSXDLNVu0k/exec';
-const REFRESH_SEC = 300; // 5 minutos
+const SK_DATA = 'sap_v5_data';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlIqCjTqO5Vw-vqmtuAeRad-26bKcen3_nR8nemjXc_NDNZgOE_sK_Dz6d9arx0Pei/exec';
 
-let OPS = [];
-let countdownSec = REFRESH_SEC;
-let countdownInterval = null;
+let DB     = loadDB();
+let TECNICO = null;
 
-// ── UTILS ──────────────────────────────────────────────────────
+function loadDB(){ try{ const r=localStorage.getItem(SK_DATA); if(r) return JSON.parse(r); }catch(e){} return {ops:[],sync:null}; }
+function saveDB(){ try{ localStorage.setItem(SK_DATA,JSON.stringify(DB)); }catch(e){} }
+
+function toMin(t){ if(!t) return -1; const p=String(t).split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; }
+function calcH(ini,fin){ const d=toMin(fin)-toMin(ini); return d>0?(d/60).toFixed(1):null; }
 function normF(val){
   if(!val&&val!==0) return '';
   const s=String(val).trim();
@@ -161,187 +121,269 @@ function normF(val){
   try{ const d=new Date(val); if(!isNaN(d.getTime())){ const u=new Date(d.getTime()-d.getTimezoneOffset()*60000); return u.toISOString().slice(0,10); } }catch(e){}
   return '';
 }
-function calcH(ini,fin){
-  const toMin=t=>{ if(!t) return -1; const s=String(t).replace(/:\d{2}$/,''); const p=s.split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; };
-  const d=toMin(fin)-toMin(ini); return d>0?d/60:0;
-}
+function fmtF(val){ const iso=normF(val); if(!iso) return '–'; const[y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; }
 function hoyKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function lunesKey(){
-  const d=new Date(); const day=d.getDay();
-  const diff=d.getDate()-(day===0?6:day-1);
-  const l=new Date(d); l.setDate(diff);
-  return l.getFullYear()+'-'+String(l.getMonth()+1).padStart(2,'0')+'-'+String(l.getDate()).padStart(2,'0');
-}
-function fmtSemana(){
-  const l=lunesKey(), h=hoyKey();
-  const fmt=iso=>{ const[y,m,d]=iso.split('-'); return d+'/'+m; };
-  return 'Semana: '+fmt(l)+' – '+fmt(h)+'/'+h.split('-')[0];
-}
-function avatarColor(nombre){
-  const colors=['#185FA5','#3B6D11','#854F0B','#6B3FA0','#0F7B6C','#A32D2D','#1A6B8A','#7B5E00'];
-  let h=0; for(let i=0;i<nombre.length;i++) h=(h*31+nombre.charCodeAt(i))&0xFFFFFF;
-  return colors[Math.abs(h)%colors.length];
-}
+function getIni(o){ return o['hora inicio']||o.hora_ini||''; }
+function getFin(o){ return o['hora fin']||o.hora_fin||''; }
+function getFReal(o){ return normF(o['fecha realización']||o['fecha realizacion']||o.fecha||''); }
 
-// ── CARGAR ─────────────────────────────────────────────────────
-async function cargar(){
-  document.getElementById('sync-dot').style.background='#fbbf24';
-  document.getElementById('sync-text').textContent='Actualizando…';
+async function sync(){
+  setSB('loading','↻ Actualizando operaciones…');
   try{
     const r=await fetch(SCRIPT_URL+'?action=leer');
     const d=await r.json();
     if(d.error) throw new Error(d.error);
-    OPS=d.operaciones||[];
-    document.getElementById('sync-dot').style.background='#4ade80';
-    document.getElementById('sync-text').textContent='Actualizado: '+new Date().toLocaleTimeString('es-PY');
-    renderRanking();
-    resetCountdown();
+    DB.ops  = d.operaciones;
+    DB.sync = new Date().toLocaleString('es-PY');
+    saveDB();
+    setSB('success','✓ Actualizado · '+DB.sync);
+    setTimeout(()=>{ document.getElementById('sync-bar').style.display='none'; },4000);
   } catch(e){
-    document.getElementById('sync-dot').style.background='#f87171';
-    document.getElementById('sync-text').textContent='Error al conectar';
+    setSB('error','Sin conexión — datos locales');
   }
 }
+function setSB(tipo,msg){ const b=document.getElementById('sync-bar'); b.className='sync-bar '+tipo; b.textContent=msg; b.style.display='flex'; }
 
-// ── RANKING ────────────────────────────────────────────────────
-function renderRanking(){
-  const hoy  = hoyKey();
-  const lunes = lunesKey();
-
-  document.getElementById('semana-label').textContent = fmtSemana();
-
-  // agrupar por técnico
-  const mapa = {};
-  OPS.forEach(o=>{
-    const k = o.legajo||'–';
-    if(!mapa[k]) mapa[k]={ legajo:k, nombre:o.tecnico||'Sin nombre', ops:[] };
-    mapa[k].ops.push(o);
-  });
-
-  const lista = Object.values(mapa).map(t=>{
-    const notif = t.ops.filter(o=>o.estado==='notificada');
-    const pend  = t.ops.filter(o=>o.estado!=='notificada').length;
-    const hsSemana = notif
-      .filter(o=>{ const f=normF(o['fecha realizacion']||o['fecha realización']||o.fecha); return f>=lunes&&f<=hoy; })
-      .reduce((a,o)=>a+calcH(o['hora inicio']||'',o['hora fin']||''),0);
-    return { ...t, pend, hsSemana:+hsSemana.toFixed(1) };
-  });
-
-  // ordenar: más horas primero, desempate por menos pendientes
-  lista.sort((a,b)=>{
-    if(b.hsSemana !== a.hsSemana) return b.hsSemana - a.hsSemana;
-    return a.pend - b.pend;
-  });
-
-  // asignar posiciones (empate = misma posición)
-  let pos=1;
-  for(let i=0;i<lista.length;i++){
-    if(i>0 && lista[i].hsSemana===lista[i-1].hsSemana && lista[i].pend===lista[i-1].pend){
-      lista[i].pos = lista[i-1].pos;
-    } else {
-      lista[i].pos = pos;
-    }
-    pos++;
+function detectarConflictos(ops){
+  const conf=new Set();
+  for(let i=0;i<ops.length;i++) for(let j=i+1;j<ops.length;j++){
+    const a=ops[i],b=ops[j];
+    const fa=getFReal(a),fb=getFReal(b);
+    if(!fa||fa!==fb) continue;
+    const ai=toMin(getIni(a)),af=toMin(getFin(a));
+    const bi=toMin(getIni(b)),bf=toMin(getFin(b));
+    if(ai<0||af<0||bi<0||bf<0||af<=ai||bf<=bi) continue;
+    if(ai<bf&&af>bi){ conf.add(i); conf.add(j); }
   }
+  return conf;
+}
 
-  const maxH = Math.max(...lista.map(t=>t.hsSemana), 1);
+window.addEventListener('DOMContentLoaded',async()=>{
+  renderCargando();
+  await sync();
+  renderLogin();
+});
 
-  document.getElementById('footer-total').textContent =
-    `${lista.length} técnicos · ${OPS.filter(o=>o.estado==='notificada').length} OS notificadas · ${OPS.filter(o=>o.estado!=='notificada').length} pendientes`;
+function renderCargando(){
+  document.getElementById('app').innerHTML=`<div class="loading-screen"><div class="big-spinner"></div><span>Cargando operaciones…</span></div>`;
+}
 
-  document.getElementById('main').innerHTML = `
-  <div class="ranking-wrap">
-    <table class="ranking-table">
-      <thead>
-        <tr>
-          <th>Pos.</th>
-          <th>Técnico</th>
-          <th style="text-align:center">Horas semana</th>
-          <th style="text-align:center">OS pendientes</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${lista.map(t=>{
-          const av = t.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-          const color = avatarColor(t.nombre);
-          const posClass = t.pos===1?'pos-1':t.pos===2?'pos-2':t.pos===3?'pos-3':'pos-other';
-          const posEmoji = t.pos===1?'🥇':t.pos===2?'🥈':t.pos===3?'🥉':t.pos;
-          const barW = Math.round((t.hsSemana/maxH)*100);
-          const pendClass = t.pend===0?'pend-0':t.pend<=3?'pend-low':'pend-high';
-          return `<tr>
-            <td class="pos-cell">
-              <div class="pos-badge ${posClass}">${posEmoji}</div>
-            </td>
-            <td class="nombre-cell">
-              <div class="tec-row">
-                <div class="tec-av" style="background:${color}">${av}</div>
-                <div>
-                  <div class="tec-nombre">${t.nombre}</div>
-                  <div class="tec-legajo">Legajo ${t.legajo}</div>
-                </div>
-              </div>
-            </td>
-            <td class="horas-cell">
-              <div class="horas-value">${t.hsSemana}h</div>
-              <div class="horas-bar-wrap"><div class="horas-bar" style="width:${barW}%;background:${color}"></div></div>
-            </td>
-            <td class="pend-cell">
-              <div class="pend-badge ${pendClass}">${t.pend}</div>
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
+function renderLogin(){
+  document.getElementById('sync-bar').style.display='none';
+  document.getElementById('header-right').innerHTML='';
+  document.getElementById('app').innerHTML=`
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-icon">👷</div>
+      <div class="login-title">Ingreso técnico</div>
+      <div class="login-sub">Ingresá tu número de legajo para ver tus operaciones asignadas</div>
+      <div class="form-group">
+        <label class="form-label">Número de legajo</label>
+        <input class="leg-input" id="leg" type="number" inputmode="numeric" placeholder="0000" onkeydown="if(event.key==='Enter')acceder()">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="acceder()">Ingresar →</button>
+      <div id="login-err" style="margin-top:12px"></div>
+    </div>
+  </div>`;
+  setTimeout(()=>document.getElementById('leg')?.focus(),200);
+}
+
+function acceder(){
+  const leg=document.getElementById('leg')?.value.trim();
+  if(!leg) return;
+  const ops=DB.ops.filter(o=>String(o.legajo)===String(leg));
+  if(!ops.length){
+    document.getElementById('login-err').innerHTML=`<div class="alert alert-warn">No hay operaciones para el legajo <strong>${leg}</strong>. Verificá el número o consultá al planificador.</div>`;
+    return;
+  }
+  const nombre=ops[0].tecnico||'Técnico';
+  const av=nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  document.getElementById('app').innerHTML=`
+  <div class="login-wrap">
+    <div class="login-box">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--blue);margin:0 auto 16px">${av}</div>
+      <div class="login-title">${nombre}</div>
+      <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:6px">Legajo ${leg}</div>
+      <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5">¿Sos vos? Confirmá para continuar.</div>
+      <button class="btn btn-primary btn-block" onclick="confirmarAcceso('${leg}','${nombre.replace(/'/g,"\\'")}')">✓ Sí, soy yo — Ingresar</button>
+      <button class="btn btn-block" style="margin-top:8px" onclick="renderLogin()">No, volver</button>
+    </div>
   </div>`;
 }
 
-// ── COUNTDOWN ──────────────────────────────────────────────────
-function resetCountdown(){
-  countdownSec = REFRESH_SEC;
-  clearInterval(countdownInterval);
-  countdownInterval = setInterval(()=>{
-    countdownSec--;
-    if(countdownSec<=0){ clearInterval(countdownInterval); cargar(); return; }
-    const m=Math.floor(countdownSec/60), s=countdownSec%60;
-    document.getElementById('countdown-text').textContent = m+':'+String(s).padStart(2,'0');
-    document.getElementById('countdown-fill').style.width = (countdownSec/REFRESH_SEC*100)+'%';
-  },1000);
+function confirmarAcceso(leg, nombre){
+  TECNICO={legajo:leg,nombre};
+  document.getElementById('header-right').innerHTML=`<button class="btn btn-ghost btn-sm" onclick="salir()">Salir</button>`;
+  renderTecnico();
 }
 
-// ── EXPORT ─────────────────────────────────────────────────────
-function abrirExport(){ document.getElementById('modal').classList.add('open'); }
-function cerrarModal(){ document.getElementById('modal').classList.remove('open'); }
+function salir(){ TECNICO=null; renderLogin(); }
 
-function exportarSAP(){
-  cerrarModal();
-  const notif = OPS.filter(o=>o.estado==='notificada'&&!o.cerrado_sap);
-  if(!notif.length){ alert('No hay operaciones notificadas para exportar.'); return; }
+function renderTecnico(){
+  const todas  = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo));
+  const pend   = todas.filter(o=>o.estado!=='notificada');
+  const notif  = todas.filter(o=>o.estado==='notificada');
+  const av     = TECNICO.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
-  const fmtFecha = val=>{ const iso=normF(val); if(!iso) return ''; const[y,m,d]=iso.split('-'); return d+'.'+m+'.'+y; };
-  const fmtHora  = h=>{ if(!h) return ''; const p=String(h).split(':'); return p[0].padStart(2,'0')+':'+(p[1]||'00').padStart(2,'0')+':00'; };
-
-  const wsData = [
-    ['ORDEN','FECHA','FECHA','HS INICIO','HS FIN','HRS TRABJ.','LEGAJO1'],
-    ...notif.map(o=>{
-      const ini=o['hora inicio']||'', fin=o['hora fin']||'';
-      const fecha=fmtFecha(o['fecha realizacion']||o['fecha realización']||o.fecha);
-      const h=calcH(ini,fin);
-      return [String(o.os||'').trim(), fecha, fecha, fmtHora(ini), fmtHora(fin), h?parseFloat(h.toFixed(1)):0, String(o.legajo||'').trim()];
-    })
-  ];
-
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(wsData);
-  for(let r=1;r<wsData.length;r++){
-    const cr=XLSX.utils.encode_cell({r,c:5});
-    if(ws[cr]){ ws[cr].t='n'; ws[cr].z='0.0##'; delete ws[cr].w; }
+  const ahora=new Date();
+  const dias=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(ahora); d.setDate(ahora.getDate()-i);
+    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const label=['D','L','M','X','J','V','S'][d.getDay()];
+    const hrs=notif.filter(o=>getFReal(o)===key).reduce((a,o)=>{ const h=calcH(getIni(o),getFin(o)); return a+(h?parseFloat(h):0); },0);
+    dias.push({key,label,esHoy:i===0,horas:+hrs.toFixed(1)});
   }
-  ws['!cols']=[{wch:14},{wch:12},{wch:12},{wch:12},{wch:12},{wch:10},{wch:10}];
-  XLSX.utils.book_append_sheet(wb,ws,'Notificaciones');
-  XLSX.writeFile(wb,'SAP_notificaciones_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  const maxH=Math.max(...dias.map(d=>d.horas),1);
+
+  const ultimos=[...notif].sort((a,b)=>(getFReal(b)+getFin(b)).localeCompare(getFReal(a)+getFin(a)));
+  const conf=detectarConflictos(ultimos);
+
+  const pendOrdenados=[...pend].sort((a,b)=>normF(a.fecha).localeCompare(normF(b.fecha)));
+
+  document.getElementById('sync-bar').style.display='none';
+
+  let html=`
+  <div class="resumen">
+    <div class="resumen-inner">
+      <div class="tec-row">
+        <div class="tec-av">${av}</div>
+        <div><div class="tec-name">${TECNICO.nombre}</div><div class="tec-leg">Legajo ${TECNICO.legajo}</div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="refrescar()">↻</button>
+      </div>
+      <div class="horas-titulo">⏱ Horas notificadas — últimos 7 días</div>
+      <div class="dias-grid">
+        ${dias.map(d=>{
+          const barH=Math.max(3,Math.round((d.horas/maxH)*36));
+          return `<div class="dia-col">
+            <div class="dia-bar-wrap"><div class="dia-bar ${d.horas>0?'tiene':''} ${d.esHoy?'hoy':''}" style="height:${barH}px"></div></div>
+            <div class="dia-label">${d.esHoy?'Hoy':d.label}</div>
+            <div class="dia-horas ${d.horas===0?'cero':''}">${d.horas>0?d.horas+'h':'–'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      ${ultimos.length>0?`
+      <div class="ultimos-titulo">📋 Últimos trabajos notificados</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${ultimos.map((o,ui)=>{
+          const ini=getIni(o),fin=getFin(o),dur=calcH(ini,fin),esCon=conf.has(ui);
+          return `<div style="background:${esCon?'rgba(163,45,45,.35)':'rgba(255,255,255,.1)'};border:1px solid ${esCon?'rgba(240,149,149,.6)':'rgba(255,255,255,.15)'};border-radius:var(--rsm);padding:8px 12px">
+            ${esCon?'<div style="font-size:10px;font-weight:700;color:#F09595;margin-bottom:3px">⚠ Superposición</div>':''}
+            <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px">${o.descripcion||'–'}</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+              <div style="font-size:11px;color:rgba(255,255,255,.65)">📅 ${fmtF(getFReal(o))} &nbsp; ▶ ${ini||'–'} ⏹ ${fin||'–'}</div>
+              ${dur?`<span style="font-size:11px;font-weight:700;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;color:#fff">${dur}h</span>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`
+      :`<div style="font-size:12px;color:rgba(255,255,255,.4);text-align:center;padding:8px 0">Sin trabajos notificados aún</div>`}
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section-title" style="margin-top:4px">
+      ⏳ Pendientes de notificar
+      <span class="badge badge-amber">${pend.length}</span>
+    </div>`;
+
+  if(pend.length===0){
+    html+=`<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">¡Todo al día!</div><div class="empty-sub">No tenés operaciones pendientes de notificar.</div></div>`;
+  } else {
+    pendOrdenados.forEach(o=>{
+      const idx=DB.ops.indexOf(o);
+      html+=`
+      <div class="op-card" id="card-${idx}">
+        <div class="op-badges">
+          ${o.os&&o.os!=='–'?`<span class="badge badge-blue">OS ${o.os}</span>`:''}
+          ${o.tipo_os?`<span class="badge badge-gray">${o.tipo_os}</span>`:''}
+        </div>
+        <div class="op-desc" style="font-size:18px">${o.descripcion||'Sin descripción'}</div>
+        <div class="op-meta">
+          ${o.fecha?`<span>📅 ${fmtF(o.fecha)}</span>`:''}
+        </div>
+        <div class="time-grid">
+          <div class="form-group" style="margin:0">
+            <label class="form-label">▶ Hora inicio</label>
+            <input type="time" id="ini-${idx}" value="${getIni(o)}">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">⏹ Hora fin</label>
+            <input type="time" id="fin-${idx}" value="${getFin(o)}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Observaciones</label>
+          <textarea id="obs-${idx}">${o.obs||''}</textarea>
+        </div>
+        <button class="btn btn-success btn-block" id="btn-${idx}" onclick="notificar(${idx})">✓ Confirmar notificación</button>
+      </div>`;
+    });
+  }
+
+  html+=`</div>`;
+  document.getElementById('app').innerHTML=html;
 }
 
-// ── INIT ───────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', ()=>{ cargar(); });
+async function notificar(idx){
+  const ini  = document.getElementById('ini-'+idx)?.value;
+  const fin  = document.getElementById('fin-'+idx)?.value;
+  const obs  = document.getElementById('obs-'+idx)?.value||'';
+  if(!ini||!fin){ toast('Ingresá hora de inicio y hora de fin.'); return; }
+  if(ini>=fin){ toast('La hora de fin debe ser mayor que la de inicio.'); return; }
+
+  const op    = DB.ops[idx];
+  const fecha = getFReal(op)||op.fecha||hoyKey();
+
+  const mismaFecha = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo)&&o.estado==='notificada'&&getFReal(o)===fecha);
+  const confExist = detectarConflictos(mismaFecha);
+  if(confExist.size>0){
+    mostrarErr('err-bloqueo-'+idx,idx,'⚠️ Tenés trabajos notificados con <strong>superposición de horarios</strong> en esta fecha (marcados en rojo arriba). Corregí esos horarios antes de continuar.');
+    return;
+  }
+
+  const btn=document.getElementById('btn-'+idx);
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Verificando…'; }
+
+  try{
+    const vr=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'verificar',legajo:TECNICO.legajo,fila:op.fila,fecha,hora_ini:ini,hora_fin:fin})});
+    const vd=await vr.json();
+    if(!vd.ok){
+      const c=vd.conflictos?.[0];
+      mostrarErr('err-'+idx,idx,c?`⚠️ Horario ocupado: <strong>${c.descripcion}</strong> (${c.hora_ini} – ${c.hora_fin}). Modificá el horario.`:'⚠️ El horario se superpone con otro trabajo.');
+      if(btn){ btn.disabled=false; btn.innerHTML='✓ Confirmar notificación'; }
+      return;
+    }
+  } catch(e){
+    const conf=DB.ops.filter((o,i)=>{ if(i===idx||o.estado!=='notificada') return false; if(getFReal(o)!==fecha) return false; const oi=toMin(getIni(o)),of=toMin(getFin(o)); return oi>=0&&of>=0&&toMin(ini)<of&&toMin(fin)>oi; });
+    if(conf.length){ mostrarErr('err-'+idx,idx,`⚠️ Superposición con <strong>${conf[0].descripcion}</strong>.`); if(btn){ btn.disabled=false; btn.innerHTML='✓ Confirmar notificación'; } return; }
+  }
+
+  const horas_real=calcH(ini,fin);
+  if(btn){ btn.innerHTML='<span class="spinner"></span>Guardando…'; }
+
+  DB.ops[idx]={...DB.ops[idx],'hora inicio':ini,'hora fin':fin,horas_real,obs,estado:'notificada','fecha realización':fecha};
+  saveDB();
+
+  try{
+    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'notificar',fila:op.fila,hora_ini:ini,hora_fin:fin,horas_real,obs,fecha})});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('✓ Guardado en Google Sheets');
+  } catch(e){ toast('Guardado localmente — sin conexión'); }
+  renderTecnico();
+}
+
+async function refrescar(){ await sync(); renderTecnico(); }
+
+function mostrarErr(id,idx,msg){
+  const ex=document.getElementById(id); if(ex) ex.remove();
+  const d=document.createElement('div'); d.id=id; d.className='alert alert-warn'; d.style.marginBottom='10px'; d.innerHTML=msg;
+  const btn=document.getElementById('btn-'+idx),card=document.getElementById('card-'+idx);
+  if(btn&&card) card.insertBefore(d,btn);
+}
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.remove('hidden'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.add('hidden'),3500); }
 </script>
 </body>
 </html>

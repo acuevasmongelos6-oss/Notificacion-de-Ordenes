@@ -25,7 +25,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .sync-bar.success{background:var(--green-lt);color:var(--green)}
 .sync-bar.error{background:var(--red-lt);color:var(--red)}
 .content{padding:16px;max-width:520px;margin:0 auto}
-/* LOGIN */
 .login-wrap{min-height:calc(100vh - 53px);display:flex;align-items:center;justify-content:center;padding:24px 16px}
 .login-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
 .login-icon{width:64px;height:64px;border-radius:50%;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
@@ -33,7 +32,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5}
 .leg-input{font-size:28px;font-weight:700;text-align:center;letter-spacing:6px;padding:14px;border:2px solid var(--border);border-radius:var(--rsm);width:100%;-webkit-appearance:none}
 .leg-input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(24,95,165,.12)}
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:14px;font-weight:600;color:var(--text);font-family:inherit;-webkit-tap-highlight-color:transparent}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
@@ -41,24 +39,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .btn-ghost{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#fff}
 .btn-sm{padding:6px 12px;font-size:12px}
 .btn-block{width:100%;margin-top:8px}
-/* BADGES */
 .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .badge-green{background:var(--green-lt);color:var(--green)}
 .badge-amber{background:var(--amber-lt);color:var(--amber)}
 .badge-blue{background:var(--blue-lt);color:var(--blue)}
 .badge-gray{background:var(--gray-lt);color:var(--gray)}
-/* ALERTS */
 .alert{padding:12px 14px;border-radius:var(--rsm);font-size:13px;margin-bottom:12px;line-height:1.5}
 .alert-info{background:var(--blue-lt);color:var(--blue-dk);border:1px solid #B5D4F4}
 .alert-warn{background:var(--amber-lt);color:var(--amber);border:1px solid #FAC775}
-/* RESUMEN SUPERIOR */
 .resumen{background:var(--blue-dk);padding:16px}
 .resumen-inner{max-width:520px;margin:0 auto}
 .tec-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .tec-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
 .tec-name{font-weight:700;font-size:15px;color:#fff}
 .tec-leg{font-size:12px;color:rgba(255,255,255,.65)}
-/* DIAS */
 .horas-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:8px}
 .dias-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px}
 .dia-col{display:flex;flex-direction:column;align-items:center;gap:3px}
@@ -69,18 +63,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .dia-label{font-size:10px;color:rgba(255,255,255,.55);font-weight:500}
 .dia-horas{font-size:10px;color:rgba(255,255,255,.9);font-weight:700}
 .dia-horas.cero{color:rgba(255,255,255,.3)}
-/* ULTIMOS */
 .ultimos-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:8px}
-.ultimos-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.ultimos-scroll::-webkit-scrollbar{display:none}
-.ultimo-card{flex-shrink:0;width:200px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--rsm);padding:10px 12px}
-.ultimo-card.conflicto{background:rgba(163,45,45,.35);border-color:rgba(240,149,149,.6)}
-.ultimo-conflict-tag{font-size:10px;font-weight:700;color:#F09595;margin-bottom:4px}
-.ultimo-desc{font-size:12px;font-weight:600;color:#fff;margin-bottom:5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ultimo-fecha{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:4px}
-.ultimo-horario{font-size:11px;color:rgba(255,255,255,.75)}
-.ultimo-hrs{font-size:11px;font-weight:700;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:20px;color:#fff;margin-top:4px;display:inline-block}
-/* OP CARDS */
 .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .op-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .op-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
@@ -94,12 +77,10 @@ input[type="time"]{width:100%;font-size:20px;font-weight:700;text-align:center;p
 input[type="time"]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.12)}
 textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rsm);background:var(--white);color:var(--text);font-size:14px;font-family:inherit;-webkit-appearance:none;resize:vertical;min-height:70px}
 textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,95,165,.12)}
-/* EMPTY */
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
 .empty-icon{font-size:48px;margin-bottom:12px}
 .empty-title{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--text)}
 .empty-sub{font-size:13px;line-height:1.5}
-/* SPINNER */
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
 .spinner-dark{border-color:rgba(24,95,165,.2);border-top-color:var(--blue)}
 .loading-screen{min-height:calc(100vh - 53px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:14px}
@@ -120,7 +101,7 @@ textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(2
 <div id="toast" class="toast hidden"></div>
 <script>
 const SK_DATA = 'sap_v5_data';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWiXOIIDt4vN5v_05l7gyiXncimja3964vVPgEIz4BpD3RHUz2nYp4vTSXDLNVu0k/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlIqCjTqO5Vw-vqmtuAeRad-26bKcen3_nR8nemjXc_NDNZgOE_sK_Dz6d9arx0Pei/exec';
 
 let DB     = loadDB();
 let TECNICO = null;
@@ -128,7 +109,6 @@ let TECNICO = null;
 function loadDB(){ try{ const r=localStorage.getItem(SK_DATA); if(r) return JSON.parse(r); }catch(e){} return {ops:[],sync:null}; }
 function saveDB(){ try{ localStorage.setItem(SK_DATA,JSON.stringify(DB)); }catch(e){} }
 
-// ── UTILS ──────────────────────────────────────────────────────
 function toMin(t){ if(!t) return -1; const p=String(t).split(':'); const h=parseInt(p[0]),m=parseInt(p[1]||0); return isNaN(h)||isNaN(m)?-1:h*60+m; }
 function calcH(ini,fin){ const d=toMin(fin)-toMin(ini); return d>0?(d/60).toFixed(1):null; }
 function normF(val){
@@ -147,7 +127,6 @@ function getIni(o){ return o['hora inicio']||o.hora_ini||''; }
 function getFin(o){ return o['hora fin']||o.hora_fin||''; }
 function getFReal(o){ return normF(o['fecha realización']||o['fecha realizacion']||o.fecha||''); }
 
-// ── SYNC ───────────────────────────────────────────────────────
 async function sync(){
   setSB('loading','↻ Actualizando operaciones…');
   try{
@@ -165,7 +144,6 @@ async function sync(){
 }
 function setSB(tipo,msg){ const b=document.getElementById('sync-bar'); b.className='sync-bar '+tipo; b.textContent=msg; b.style.display='flex'; }
 
-// ── DETECCIÓN CONFLICTOS ───────────────────────────────────────
 function detectarConflictos(ops){
   const conf=new Set();
   for(let i=0;i<ops.length;i++) for(let j=i+1;j<ops.length;j++){
@@ -180,7 +158,6 @@ function detectarConflictos(ops){
   return conf;
 }
 
-// ── INIT ───────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',async()=>{
   renderCargando();
   await sync();
@@ -191,7 +168,6 @@ function renderCargando(){
   document.getElementById('app').innerHTML=`<div class="loading-screen"><div class="big-spinner"></div><span>Cargando operaciones…</span></div>`;
 }
 
-// ── LOGIN ──────────────────────────────────────────────────────
 function renderLogin(){
   document.getElementById('sync-bar').style.display='none';
   document.getElementById('header-right').innerHTML='';
@@ -222,7 +198,6 @@ function acceder(){
   }
   const nombre=ops[0].tecnico||'Técnico';
   const av=nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-  // mostrar pantalla de confirmación
   document.getElementById('app').innerHTML=`
   <div class="login-wrap">
     <div class="login-box">
@@ -244,14 +219,12 @@ function confirmarAcceso(leg, nombre){
 
 function salir(){ TECNICO=null; renderLogin(); }
 
-// ── VISTA TÉCNICO ──────────────────────────────────────────────
 function renderTecnico(){
   const todas  = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo));
   const pend   = todas.filter(o=>o.estado!=='notificada');
   const notif  = todas.filter(o=>o.estado==='notificada');
   const av     = TECNICO.nombre.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
-  // horas 7 días
   const ahora=new Date();
   const dias=[];
   for(let i=6;i>=0;i--){
@@ -263,11 +236,9 @@ function renderTecnico(){
   }
   const maxH=Math.max(...dias.map(d=>d.horas),1);
 
-  // últimos notificados — más recientes primero, sin límite visible
   const ultimos=[...notif].sort((a,b)=>(getFReal(b)+getFin(b)).localeCompare(getFReal(a)+getFin(a)));
   const conf=detectarConflictos(ultimos);
 
-  // pendientes — más viejos primero (fecha más antigua al tope)
   const pendOrdenados=[...pend].sort((a,b)=>normF(a.fecha).localeCompare(normF(b.fecha)));
 
   document.getElementById('sync-bar').style.display='none';
@@ -355,7 +326,6 @@ function renderTecnico(){
   document.getElementById('app').innerHTML=html;
 }
 
-// ── NOTIFICAR ──────────────────────────────────────────────────
 async function notificar(idx){
   const ini  = document.getElementById('ini-'+idx)?.value;
   const fin  = document.getElementById('fin-'+idx)?.value;
@@ -366,7 +336,6 @@ async function notificar(idx){
   const op    = DB.ops[idx];
   const fecha = getFReal(op)||op.fecha||hoyKey();
 
-  // bloquear si hay superposiciones en la misma fecha del trabajo a notificar
   const mismaFecha = DB.ops.filter(o=>String(o.legajo)===String(TECNICO.legajo)&&o.estado==='notificada'&&getFReal(o)===fecha);
   const confExist = detectarConflictos(mismaFecha);
   if(confExist.size>0){
@@ -377,7 +346,6 @@ async function notificar(idx){
   const btn=document.getElementById('btn-'+idx);
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Verificando…'; }
 
-  // verificar en Sheets
   try{
     const vr=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'verificar',legajo:TECNICO.legajo,fila:op.fila,fecha,hora_ini:ini,hora_fin:fin})});
     const vd=await vr.json();
@@ -388,7 +356,6 @@ async function notificar(idx){
       return;
     }
   } catch(e){
-    // sin conexión — validación local
     const conf=DB.ops.filter((o,i)=>{ if(i===idx||o.estado!=='notificada') return false; if(getFReal(o)!==fecha) return false; const oi=toMin(getIni(o)),of=toMin(getFin(o)); return oi>=0&&of>=0&&toMin(ini)<of&&toMin(fin)>oi; });
     if(conf.length){ mostrarErr('err-'+idx,idx,`⚠️ Superposición con <strong>${conf[0].descripcion}</strong>.`); if(btn){ btn.disabled=false; btn.innerHTML='✓ Confirmar notificación'; } return; }
   }
